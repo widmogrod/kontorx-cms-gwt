@@ -1,0 +1,28 @@
+.kx-InfoBox {position: absolute; top: 0; left: 40%;}
+
+.kx-InfoBox .kx-InfoBox-info,
+.kx-InfoBox .kx-InfoBox-error {padding: 5px; margin-bottom: 1px; text-align: center;}
+
+.kx-InfoBox .kx-InfoBox-info  {background-color: #FAB81E;}
+.kx-InfoBox .kx-InfoBox-error {background-color: #BA1A1A;}
+
+.kx-DropDownList {}
+
+.kx-CheckBoxListManager {
+	display:block;
+	width:100%;
+}
+
+.kx-CheckBoxList {
+	padding: 2px;
+	display:block;
+	width:100%;
+	border-bottom: 1px solid silver;
+}
+.kx-CheckBoxList.checked {
+	background: silver;
+}
+.kx-CheckBoxList-Label {
+	display: block;
+	width: 100%;
+}

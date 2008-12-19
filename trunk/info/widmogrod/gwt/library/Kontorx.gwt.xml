@@ -1,0 +1,5 @@
+<module>
+	<inherits name="com.google.gwt.user.User"/>
+	<inherits name='com.fredhat.gwt.xmlrpc.XMLRPC'/>
+	<stylesheet src="css/kx/style.css"/>
+</module>
