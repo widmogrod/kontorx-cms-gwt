@@ -1,0 +1,20 @@
+<module>
+
+	<!-- Inherit the core Web Toolkit stuff.                  -->
+	<inherits name='com.google.gwt.user.User'/>
+	<inherits name="com.google.gwt.json.JSON" />
+	<inherits name='org.puremvc.PureMVC_Java_MultiCore'/>
+	<inherits name='com.fredhat.gwt.xmlrpc.XMLRPC'/>
+
+	<!-- Added libraries -->
+	<inherits name="info.widmogrod.gwt.library.Kontorx"/>
+
+	<!-- Specify the app entry point class.                   -->
+	<entry-point class='info.widmogrod.gwt.kontorx.client.Gallery'/>
+  
+  	<!-- <inherits name="com.google.gwt.user.theme.standard.Standard"/> -->
+  	<inherits name="com.google.gwt.user.theme.chrome.Chrome"/>
+  	<!-- <inherits name="com.google.gwt.user.theme.dark.Dark"/> -->
+  	
+  	<stylesheet src="css/kx/gallery.css"/>
+</module>

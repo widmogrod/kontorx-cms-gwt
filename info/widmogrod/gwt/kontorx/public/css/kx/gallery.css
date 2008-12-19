@@ -1,0 +1,12 @@
+@CHARSET "UTF-8";
+.kx-header-2 {
+	font-weight: bold;
+	font-size:  1em;
+}
+
+.kx-MenuListManager {}
+
+.kx-GalleryBlock {
+	width: 20opx;
+}
+.kx-EditPanel {}
