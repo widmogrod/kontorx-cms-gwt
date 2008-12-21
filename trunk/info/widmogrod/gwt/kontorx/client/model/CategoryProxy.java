@@ -1,5 +1,7 @@
 package info.widmogrod.gwt.kontorx.client.model;
 
+import info.widmogrod.gwt.kontorx.client.model.vo.CategoryVO;
+import info.widmogrod.gwt.kontorx.client.model.vo.GalleryVO;
 import info.widmogrod.gwt.kontorx.client.view.InfoBoxMediator;
 import info.widmogrod.gwt.library.client.db.xmlrpc.XmlRpcDbTableDecorator;
 import info.widmogrod.gwt.library.client.puremvc.patterns.ProxyModel;
@@ -11,7 +13,7 @@ import java.util.Iterator;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public class CategoryProxy extends ProxyModel<Category> {
+public class CategoryProxy extends ProxyModel<CategoryVO> {
 
 	public static final String NAME = "CategoryProxy";
 
@@ -20,29 +22,29 @@ public class CategoryProxy extends ProxyModel<Category> {
 	public static final String XMLRPC_PROXY = "category";
 
 	// Notifications
-	public static final String BLOCK_ACTION_NEW = "CategoryProxy_CATEGORY_NEW";
-	public static final String BLOCK_ACTION_CANCEL = "CategoryProxy_CATEGORY_CANCEL";
-	public static final String BLOCK_ACTION_LOAD = "CategoryProxy_CATEGORY_LOADED";
-	public static final String BLOCK_ACTION_LOAD_MULTI = "CategoryProxy_CATEGORY_LOADED_MULTI";
+	public static final String BLOCK_ACTION_NEW = "CategoryProxy_BLOCK_ACTION_NEW";
+	public static final String BLOCK_ACTION_CANCEL = "CategoryProxy_BLOCK_ACTION_CANCEL";
+	public static final String BLOCK_ACTION_LOAD = "CategoryProxy_BLOCK_ACTION_LOAD";
+	public static final String BLOCK_ACTION_LOAD_MULTI = "CategoryProxy_BLOCK_ACTION_LOAD_MULTI";
 	public static final String CATEGORY_ADDED = "CategoryProxy_CATEGORY_ADDED";
 	public static final String CATEGORY_DELETED = "CategoryProxy_CATEGORY_DELETED";
 	public static final String CATEGORY_DELETED_MULTI = "CategoryProxy_CATEGORY_DELETED_MULTI";
 	public static final String CATEGORY_UPDATED = "CategoryProxy_CATEGORY_UPDATED";
 	public static final String CATEGORY_UPDATED_MULTI = "CategoryProxy_CATEGORY_UPDATED_MULTI";
 
-	private XmlRpcDbTableDecorator<Category> clientModel;
+	private XmlRpcDbTableDecorator<CategoryVO> clientModel;
 
 	public CategoryProxy() {
 		super(NAME);
-		clientModel = new XmlRpcDbTableDecorator<Category>(XMLRPC_URL, XMLRPC_PROXY);
+		clientModel = new XmlRpcDbTableDecorator<CategoryVO>(XMLRPC_URL, XMLRPC_PROXY);
 	}
 
-	protected void addModelRow(Category row) {
+	protected void addModelRow(CategoryVO row) {
 		getModel().add(row);
 	}
 	
-	protected void updateModelRow(Category row) {
-		ArrayList<Category> model = getModel();
+	protected void updateModelRow(CategoryVO row) {
+		ArrayList<CategoryVO> model = getModel();
 		for (int i = 0; i < model.size(); i++) {
 			if (model.get(i).getId() == row.getId()) {
 				model.set(i, row);
@@ -50,17 +52,17 @@ public class CategoryProxy extends ProxyModel<Category> {
 		}
 	}
 	
-	protected void updateModelRowset(ArrayList<Integer> idList, Category row) {
-		ArrayList<Category> model = getModel();
-		for (Category r : model) {
+	protected void updateModelRowset(ArrayList<Integer> idList, CategoryVO row) {
+		ArrayList<CategoryVO> model = getModel();
+		for (CategoryVO r : model) {
 			if (idList.contains(r.getId())) {
 				r.setPublicated(row.getPublicated());
 			}
 		}
 	}
 
-	protected void deleteModelRow(Category row) {
-		Iterator<Category> i = getModel().iterator();
+	protected void deleteModelRow(CategoryVO row) {
+		Iterator<CategoryVO> i = getModel().iterator();
 		while (i.hasNext()) {
 			if (i.next().getId() == row.getId()) {
 				i.remove();
@@ -69,7 +71,7 @@ public class CategoryProxy extends ProxyModel<Category> {
 	}
 
 	protected void deleteModelRowset(ArrayList<Integer> idList) {
-		Iterator<Category> i = getModel().iterator();
+		Iterator<CategoryVO> i = getModel().iterator();
 		while (i.hasNext()) {
 			if (idList.contains(i.next().getId())) {
 				i.remove();
@@ -77,7 +79,7 @@ public class CategoryProxy extends ProxyModel<Category> {
 		}
 	}
 
-	public void add(final Category row) {
+	public void add(final CategoryVO row) {
 		clientModel.insert(row.getData(), new AsyncCallback<Integer>() {
 			public void onSuccess(Integer result) {
 				row.setId(result);
@@ -97,7 +99,7 @@ public class CategoryProxy extends ProxyModel<Category> {
 		});
 	}
 	
-	public void delete(final Category row) {
+	public void delete(final CategoryVO row) {
 		clientModel.delete(row.getId(), new AsyncCallback<Object>(){
 			public void onSuccess(Object result) {
 				// dzialanie off-line
@@ -115,9 +117,9 @@ public class CategoryProxy extends ProxyModel<Category> {
 		});
 	}
 	
-	public void delete(final ArrayList<Category> rowset) {
+	public void delete(final ArrayList<CategoryVO> rowset) {
 		final ArrayList<Integer> idList = new ArrayList<Integer>();
-		for (Category model : rowset) {
+		for (CategoryVO model : rowset) {
 			idList.add(model.getId());
 		}
 
@@ -138,7 +140,7 @@ public class CategoryProxy extends ProxyModel<Category> {
 		});
 	}
 	
-	public void edit(final Category row) {
+	public void edit(final CategoryVO row) {
 		clientModel.update(row.getId(), row.getData(), new AsyncCallback<Object>() {
 			public void onSuccess(Object result) {
 				// dzialanie off-line
@@ -156,9 +158,9 @@ public class CategoryProxy extends ProxyModel<Category> {
 		});
 	}
 
-	public void edit(ArrayList<Category> rowset, final Category row) {
+	public void edit(ArrayList<CategoryVO> rowset, final CategoryVO row) {
 		final ArrayList<Integer> idList = new ArrayList<Integer>();
-		for (Category model : rowset) {
+		for (CategoryVO model : rowset) {
 			idList.add(model.getId());
 		}
 
@@ -179,8 +181,8 @@ public class CategoryProxy extends ProxyModel<Category> {
 		});
 	}
 
-	public Category findBy(Gallery gallery) {
-		for (Category row : getModel()) {
+	public CategoryVO findBy(GalleryVO gallery) {
+		for (CategoryVO row : getModel()) {
 			if (row.getId() == gallery.getCategoryId()) {
 				return row;
 			}
@@ -189,8 +191,8 @@ public class CategoryProxy extends ProxyModel<Category> {
 	}
 	
 	public void load(final AsyncCallback<Boolean> asyncCallback) {
-		clientModel.findAll(new AsyncCallback<ArrayList<Category>>() {
-			public void onSuccess(ArrayList<Category> result) {
+		clientModel.findAll(new AsyncCallback<ArrayList<CategoryVO>>() {
+			public void onSuccess(ArrayList<CategoryVO> result) {
 				setModel(result);
 				asyncCallback.onSuccess(true);
 			}

@@ -11,6 +11,10 @@ import info.widmogrod.gwt.kontorx.client.view.gallery.GalleryBlockMediator;
 import info.widmogrod.gwt.kontorx.client.view.gallery.GalleryFormMediator;
 import info.widmogrod.gwt.kontorx.client.view.gallery.components.GalleryBlock;
 import info.widmogrod.gwt.kontorx.client.view.gallery.components.GalleryForm;
+import info.widmogrod.gwt.kontorx.client.view.image.ImageBlockMediator;
+import info.widmogrod.gwt.kontorx.client.view.image.ImageFormMediator;
+import info.widmogrod.gwt.kontorx.client.view.image.components.ImageBlock;
+import info.widmogrod.gwt.kontorx.client.view.image.components.ImageForm;
 import info.widmogrod.gwt.library.client.ui.InfoBox;
 
 import org.puremvc.java.multicore.interfaces.INotification;
@@ -50,5 +54,13 @@ public class InitViewCommand extends SimpleCommand {
 		
 		// GalleryForm
 		facade.registerMediator(new GalleryFormMediator(new GalleryForm()));
+		
+		// ImageBlock
+		ImageBlock imageBlock = new ImageBlock();
+		mainWindow.setImageBlock(imageBlock);
+		facade.registerMediator(new ImageBlockMediator(imageBlock));
+		
+		// GalleryForm
+		facade.registerMediator(new ImageFormMediator(new ImageForm()));
 	}
 }

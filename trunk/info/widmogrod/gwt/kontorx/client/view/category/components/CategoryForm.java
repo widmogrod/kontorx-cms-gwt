@@ -1,6 +1,6 @@
 package info.widmogrod.gwt.kontorx.client.view.category.components;
 
-import info.widmogrod.gwt.kontorx.client.model.Category;
+import info.widmogrod.gwt.kontorx.client.model.vo.CategoryVO;
 import info.widmogrod.gwt.library.client.BindTextBox;
 import info.widmogrod.gwt.library.client.Bindable;
 import info.widmogrod.gwt.library.client.BindableListener;
@@ -118,29 +118,29 @@ public class CategoryForm extends Composite {
 		return nameTextBox;
 	}
 
-	private Category model;
+	private CategoryVO model;
 
 	public void cleanModel() {
 		this.model = null;
-		setModel(Category.get());
+		setModel(CategoryVO.get());
 	}
 	
-	public void setModel(Category model) {
+	public void setModel(CategoryVO model) {
 		this.model = model;
 		nameTextBox.setText(model.getName());
 		urlTextBox.setText(model.getUrl());
 		getPublicatedCheckBox().setChecked(model.getPublicated());
 	}
 
-	public Category getModel() {
+	public CategoryVO getModel() {
 		model.setName(nameTextBox.getText());
 		model.setUrl(urlTextBox.getText());
 		model.setPublicated(getPublicatedCheckBox().isChecked());
 		return model;
 	}
 
-	public Category getNewModel() {
-		Category model = Category.get();
+	public CategoryVO getNewModel() {
+		CategoryVO model = CategoryVO.get();
 		model.setName(nameTextBox.getText());
 		model.setUrl(urlTextBox.getText());
 		model.setPublicated(getPublicatedCheckBox().isChecked());

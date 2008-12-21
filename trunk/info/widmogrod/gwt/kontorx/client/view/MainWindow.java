@@ -2,6 +2,7 @@ package info.widmogrod.gwt.kontorx.client.view;
 
 import info.widmogrod.gwt.kontorx.client.view.category.components.CategoryBlock;
 import info.widmogrod.gwt.kontorx.client.view.gallery.components.GalleryBlock;
+import info.widmogrod.gwt.kontorx.client.view.image.components.ImageBlock;
 import info.widmogrod.gwt.library.client.ui.InfoBox;
 
 import com.google.gwt.user.client.ui.Composite;
@@ -18,6 +19,7 @@ public class MainWindow extends Composite {
 	private FlexTable eastFlexTable;
 	private FlexTable westFlexTable;
 	private FlexTable northFlexTable;
+	private DecoratorPanel decoratorPanel3;
 	
 	public MainWindow() {
 		dockPanel = new DockPanel();
@@ -30,7 +32,7 @@ public class MainWindow extends Composite {
 		DecoratorPanel decoratorPanel1 = new DecoratorPanel();
 		eastFlexTable = new FlexTable();
 		decoratorPanel1.setWidget(eastFlexTable);
-		
+
 		dockPanel.add(decoratorPanel1, DockPanel.WEST);
 		dockPanel.setCellWidth(decoratorPanel1, "215px");
 		dockPanel.setCellHorizontalAlignment(decoratorPanel1, DockPanel.ALIGN_LEFT);
@@ -42,9 +44,15 @@ public class MainWindow extends Composite {
 		decoratorPanel2.setWidget(westFlexTable);
 		
 		dockPanel.add(decoratorPanel2, DockPanel.EAST);
-		dockPanel.setCellWidth(decoratorPanel2, "500px");
+		dockPanel.setCellWidth(decoratorPanel2, "400px");
 		dockPanel.setCellHorizontalAlignment(decoratorPanel2, DockPanel.ALIGN_RIGHT);
 		dockPanel.setCellVerticalAlignment(decoratorPanel2, DockPanel.ALIGN_TOP);
+		
+		decoratorPanel3 = new DecoratorPanel();
+		dockPanel.add(decoratorPanel3, DockPanel.CENTER);
+		dockPanel.setCellWidth(decoratorPanel3, "300px");
+		dockPanel.setCellHorizontalAlignment(decoratorPanel3, DockPanel.ALIGN_RIGHT);
+		dockPanel.setCellVerticalAlignment(decoratorPanel3, DockPanel.ALIGN_TOP);
 	}
 
 	public void setInfoBox(InfoBox widget) {
@@ -72,5 +80,10 @@ public class MainWindow extends Composite {
 		CellFormatter cf = eastFlexTable.getCellFormatter();
 		cf.setAlignment(2, 0, HasHorizontalAlignment.ALIGN_LEFT, HasVerticalAlignment.ALIGN_TOP);
 		cf.setStyleName(2, 0, "kx-GalleryBlock");
+	}
+	
+	public void setImageBlock(ImageBlock widget) {
+		decoratorPanel3.setWidget(widget);
+		widget.setWidth("290px");
 	}
 }

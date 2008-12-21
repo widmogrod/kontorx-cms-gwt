@@ -1,8 +1,8 @@
 package info.widmogrod.gwt.kontorx.client.view.category;
 
 import info.widmogrod.gwt.kontorx.client.ApplicationFacade;
-import info.widmogrod.gwt.kontorx.client.model.Category;
 import info.widmogrod.gwt.kontorx.client.model.CategoryProxy;
+import info.widmogrod.gwt.kontorx.client.model.vo.CategoryVO;
 import info.widmogrod.gwt.kontorx.client.view.category.components.CategoryForm;
 import info.widmogrod.gwt.kontorx.client.view.category.components.CategoryForm.Mode;
 
@@ -36,7 +36,7 @@ public class CategoryFormMediator extends Mediator {
 						break;
 					case UPDATE_MULTI:
 						CategoryBlockMediator mediator = (CategoryBlockMediator) Facade.getInstance(ApplicationFacade.INIT).retrieveMediator(CategoryBlockMediator.NAME);
-						ArrayList<Category> models = mediator.getViewComponent().getCheckBoxListManager().getCheckedModels();
+						ArrayList<CategoryVO> models = mediator.getViewComponent().getCheckBoxListManager().getCheckedModels();
 						proxy.edit(models, view.getModel());
 						break;
 				}
@@ -52,7 +52,7 @@ public class CategoryFormMediator extends Mediator {
 						break;
 					case UPDATE_MULTI:
 						CategoryBlockMediator mediator = (CategoryBlockMediator) Facade.getInstance(ApplicationFacade.INIT).retrieveMediator(CategoryBlockMediator.NAME);
-						ArrayList<Category> models = mediator.getViewComponent().getCheckBoxListManager().getCheckedModels();
+						ArrayList<CategoryVO> models = mediator.getViewComponent().getCheckBoxListManager().getCheckedModels();
 						proxy.delete(models);
 						break;
 				}
@@ -103,11 +103,11 @@ public class CategoryFormMediator extends Mediator {
 				|| name == CategoryProxy.CATEGORY_UPDATED
 				|| name == CategoryProxy.CATEGORY_ADDED) {
 			view.setMode(Mode.UPDATE);
-			view.setModel((Category) notification.getBody());
+			view.setModel((CategoryVO) notification.getBody());
 		} else
 		if (name == CategoryProxy.CATEGORY_DELETED_MULTI) {
 			view.setMode(Mode.UPDATE_MULTI);
-			view.setModel((Category) notification.getBody());
+			view.setModel((CategoryVO) notification.getBody());
 		} else
 		if (name == CategoryProxy.CATEGORY_DELETED) {
 			view.setMode(Mode.ADD);

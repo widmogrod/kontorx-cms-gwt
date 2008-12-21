@@ -2,14 +2,14 @@ package info.widmogrod.gwt.kontorx.client.view.gallery;
 
 import info.widmogrod.gwt.kontorx.client.ApplicationFacade;
 import info.widmogrod.gwt.kontorx.client.model.CategoryProxy;
-import info.widmogrod.gwt.kontorx.client.model.Gallery;
 import info.widmogrod.gwt.kontorx.client.model.GalleryProxy;
+import info.widmogrod.gwt.kontorx.client.model.vo.GalleryVO;
 import info.widmogrod.gwt.kontorx.client.view.InfoBoxMediator;
 import info.widmogrod.gwt.kontorx.client.view.gallery.components.GalleryBlock;
-import info.widmogrod.gwt.library.client.ui.CheckBoxList;
-import info.widmogrod.gwt.library.client.ui.CheckBoxListManager;
-import info.widmogrod.gwt.library.client.ui.CheckBoxListRenderCallback;
 import info.widmogrod.gwt.library.client.ui.InfoBox;
+import info.widmogrod.gwt.library.client.ui.interfaces.RenderCallback;
+import info.widmogrod.gwt.library.client.ui.list.CheckBoxList;
+import info.widmogrod.gwt.library.client.ui.list.CheckBoxListManager;
 
 import org.puremvc.java.multicore.interfaces.INotification;
 import org.puremvc.java.multicore.patterns.facade.Facade;
@@ -31,11 +31,11 @@ public class GalleryBlockMediator extends Mediator {
 			}
 		});
 
-		final CheckBoxListManager<Gallery> manager = view.getCheckBoxListManager();
+		final CheckBoxListManager<GalleryVO> manager = view.getCheckBoxListManager();
 
 		// renderowanie odpowiednich nazw
-		manager.setRenderCallback(new CheckBoxListRenderCallback<Gallery>() {
-			public void onRender(CheckBoxList<Gallery> component, Gallery model) {
+		manager.setRenderCallback(new RenderCallback<CheckBoxList<GalleryVO>, GalleryVO>() {
+			public void onRender(CheckBoxList<GalleryVO> component, GalleryVO model) {
 				component.setText(model.getName());
 			}
 		});
@@ -47,7 +47,7 @@ public class GalleryBlockMediator extends Mediator {
 					// powiadamia ze jest zaznaczonych kilka ..
 					sendNotification(GalleryProxy.BLOCK_ACTION_LOAD_MULTI, null, null);
 				} else {
-					CheckBoxList<Gallery> ch = (CheckBoxList<Gallery>) sender;
+					CheckBoxList<GalleryVO> ch = (CheckBoxList<GalleryVO>) sender;
 					if (ch.isChecked()) {
 						// zaznaczona jest jedna galeria
 						sendNotification(GalleryProxy.BLOCK_ACTION_LOAD, ch.getModel(), null);
@@ -104,7 +104,7 @@ public class GalleryBlockMediator extends Mediator {
 	
 	@Override
 	public void handleNotification(INotification notification) {
-		CheckBoxListManager<Gallery> manager = getViewComponent().getCheckBoxListManager();
+		CheckBoxListManager<GalleryVO> manager = getViewComponent().getCheckBoxListManager();
 		
 		String name = notification.getName();
 		if (name == GalleryProxy.GALLERY_UPDATED) {

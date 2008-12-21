@@ -1,7 +1,7 @@
 package info.widmogrod.gwt.kontorx.client.view.gallery.components;
 
-import info.widmogrod.gwt.kontorx.client.model.Gallery;
-import info.widmogrod.gwt.library.client.ui.CheckBoxListManager;
+import info.widmogrod.gwt.kontorx.client.model.vo.GalleryVO;
+import info.widmogrod.gwt.library.client.ui.list.CheckBoxListManager;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class GalleryBlock extends Composite {
 
 	private Button addButton;
-	CheckBoxListManager<Gallery> checkBoxListManager;
+	CheckBoxListManager<GalleryVO> checkBoxListManager;
 
 	public GalleryBlock() {
 		VerticalPanel verticalPanel = new VerticalPanel();
@@ -36,12 +36,20 @@ public class GalleryBlock extends Composite {
 		horizontalPanel.setCellHorizontalAlignment(addButton, HasHorizontalAlignment.ALIGN_RIGHT);
 		addButton.setText("Dodaj");
 		
-		checkBoxListManager = new CheckBoxListManager<Gallery>();
+		checkBoxListManager = new CheckBoxListManager<GalleryVO>();
+		// TODO Może to przypadek ale gdy dodam zawartosc ponizej
+		// nie pokauje sie w form - kategorie
+//		{
+//			@Override
+//			public boolean compareObject(GalleryVO o1, GalleryVO o2) {
+//				return o1.getId() == o2.getId();
+//			}
+//		};
 		verticalPanel.add(checkBoxListManager);
 		verticalPanel.setCellWidth(checkBoxListManager, "100%");
 	}
 
-	public CheckBoxListManager<Gallery> getCheckBoxListManager() {
+	public CheckBoxListManager<GalleryVO> getCheckBoxListManager() {
 		return checkBoxListManager;
 	}
 	public Button getAddButton() {

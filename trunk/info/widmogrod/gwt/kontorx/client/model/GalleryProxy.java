@@ -1,5 +1,8 @@
 package info.widmogrod.gwt.kontorx.client.model;
 
+import info.widmogrod.gwt.kontorx.client.model.vo.CategoryVO;
+import info.widmogrod.gwt.kontorx.client.model.vo.GalleryVO;
+import info.widmogrod.gwt.kontorx.client.model.vo.ImageVO;
 import info.widmogrod.gwt.kontorx.client.view.InfoBoxMediator;
 import info.widmogrod.gwt.library.client.db.xmlrpc.XmlRpcDbTableDecorator;
 import info.widmogrod.gwt.library.client.puremvc.patterns.ProxyModel;
@@ -12,7 +15,7 @@ import java.util.Iterator;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public class GalleryProxy extends ProxyModel<Gallery> {
+public class GalleryProxy extends ProxyModel<GalleryVO> {
 
 	public static String NAME = "GalleryProxy";
 	
@@ -21,32 +24,30 @@ public class GalleryProxy extends ProxyModel<Gallery> {
 	public static String XMLRPC_PROXY = "gallery";
 
 	// Notifications
-	public static String BLOCK_ACTION_NEW = "GalleryProxy_GALLERY_NEW";
-	public static String BLOCK_ACTION_CANCEL = "GalleryProxy_GALLERY_CANCEL";
+	public static String BLOCK_ACTION_NEW = "GalleryProxy_BLOCK_ACTION_NEW";
+	public static String BLOCK_ACTION_CANCEL = "GalleryProxy_BLOCK_ACTION_CANCEL";
 	public static String GALLERY_ADDED = "GalleryProxy_GALLERY_ADDED";
-	public static String BLOCK_ACTION_LOAD = "GalleryProxy_GALLERY_LOADED";
-	public static String BLOCK_ACTION_LOAD_MULTI = "GalleryProxy_GALLERY_LOADED_MULTI";
+	public static String BLOCK_ACTION_LOAD = "GalleryProxy_BLOCK_ACTION_LOAD";
+	public static String BLOCK_ACTION_LOAD_MULTI = "GalleryProxy_BLOCK_ACTION_LOAD_MULTI";
 	public static String GALLERY_DELETED = "GalleryProxy_GALLERY_DELETED";
 	public static String GALLERY_DELETED_MULTI = "GalleryProxy_GALLERY_DELETED_MULTI";
 	public static String GALLERY_UPDATED = "GalleryProxy_GALLERY_UPDATED";
 	public static String GALLERY_UPDATED_MULTI = "GalleryProxy_GALLERY_UPDATED_MULTI";
-	public static String GALLERY_UPDATED_CATEGORY = "GalleryProxy_GALLERY_UPDATE_CATEGORY_MULTI";
+	public static String GALLERY_UPDATED_CATEGORY = "GalleryProxy_GALLERY_UPDATED_CATEGORY";
 	
-	public static String GALLERY_LIST_REFRESH = "GalleryProxy_GALLERY_LIST_REFRESH";
-	
-	private XmlRpcDbTableDecorator<Gallery> clientModel;
+	private XmlRpcDbTableDecorator<GalleryVO> clientModel;
 
 	public GalleryProxy() {
 		super(NAME);
-		clientModel = new XmlRpcDbTableDecorator<Gallery>(XMLRPC_URL, XMLRPC_PROXY);
+		clientModel = new XmlRpcDbTableDecorator<GalleryVO>(XMLRPC_URL, XMLRPC_PROXY);
 	}
 	
-	protected void addModelRow(Gallery row) {
+	protected void addModelRow(GalleryVO row) {
 		getModel().add(row);
 	}
 	
-	protected void updateModelRow(Gallery row) {
-		ArrayList<Gallery> model = getModel();
+	protected void updateModelRow(GalleryVO row) {
+		ArrayList<GalleryVO> model = getModel();
 		for (int i = 0; i < model.size(); i++) {
 			if (model.get(i).getId() == row.getId()) {
 				model.set(i, row);
@@ -54,18 +55,18 @@ public class GalleryProxy extends ProxyModel<Gallery> {
 		}
 	}
 	
-	protected void updateModelRowset(ArrayList<Integer> idList, Gallery row) {
-		ArrayList<Gallery> model = getModel();
-		for (Gallery r : model) {
+	protected void updateModelRowset(ArrayList<Integer> idList, GalleryVO row) {
+		ArrayList<GalleryVO> model = getModel();
+		for (GalleryVO r : model) {
 			if (idList.contains(r.getId())) {
 				r.setPublicated(row.getPublicated());
 			}
 		}
 	}
 	
-	protected void updateModelRowset(ArrayList<Integer> idList, Category category) {
-		ArrayList<Gallery> model = getModel();
-		for (Gallery r : model) {
+	protected void updateModelRowset(ArrayList<Integer> idList, CategoryVO category) {
+		ArrayList<GalleryVO> model = getModel();
+		for (GalleryVO r : model) {
 			if (idList.contains(r.getId())) {
 				r.setCategoryId(category.getId());
 			}
@@ -73,8 +74,8 @@ public class GalleryProxy extends ProxyModel<Gallery> {
 		
 	}
 
-	protected void deleteModelRow(Gallery row) {
-		Iterator<Gallery> i = getModel().iterator();
+	protected void deleteModelRow(GalleryVO row) {
+		Iterator<GalleryVO> i = getModel().iterator();
 		while (i.hasNext()) {
 			if (i.next().getId() == row.getId()) {
 				i.remove();
@@ -83,7 +84,7 @@ public class GalleryProxy extends ProxyModel<Gallery> {
 	}
 
 	protected void deleteModelRowset(ArrayList<Integer> idList) {
-		Iterator<Gallery> i = getModel().iterator();
+		Iterator<GalleryVO> i = getModel().iterator();
 		while (i.hasNext()) {
 			if (idList.contains(i.next().getId())) {
 				i.remove();
@@ -91,7 +92,7 @@ public class GalleryProxy extends ProxyModel<Gallery> {
 		}
 	}
 	
-	public void add(final Gallery row) {
+	public void add(final GalleryVO row) {
 		clientModel.insert(row.getData(), new AsyncCallback<Integer>() {
 			public void onSuccess(Integer result) {
 				row.setId(result);
@@ -111,7 +112,7 @@ public class GalleryProxy extends ProxyModel<Gallery> {
 		});
 	}
 
-	public void delete(final Gallery row) {
+	public void delete(final GalleryVO row) {
 		clientModel.delete(row.getId(), new AsyncCallback<Object>(){
 			public void onSuccess(Object result) {
 				// dzialanie off-line
@@ -129,9 +130,9 @@ public class GalleryProxy extends ProxyModel<Gallery> {
 		});
 	}
 	
-	public void delete(final ArrayList<Gallery> rowset) {
+	public void delete(final ArrayList<GalleryVO> rowset) {
 		final ArrayList<Integer> idList = new ArrayList<Integer>();
-		for (Gallery model : rowset) {
+		for (GalleryVO model : rowset) {
 			idList.add(model.getId());
 		}
 
@@ -152,7 +153,7 @@ public class GalleryProxy extends ProxyModel<Gallery> {
 		});
 	}
 	
-	public void edit(final Gallery row) {
+	public void edit(final GalleryVO row) {
 		clientModel.update(row.getId(), row.getData(), new AsyncCallback<Object>() {
 			public void onSuccess(Object result) {
 				// dzialanie off-line
@@ -170,9 +171,9 @@ public class GalleryProxy extends ProxyModel<Gallery> {
 		});
 	}
 
-	public void edit(ArrayList<Gallery> rowset, final Gallery row) {
+	public void edit(ArrayList<GalleryVO> rowset, final GalleryVO row) {
 		final ArrayList<Integer> idList = new ArrayList<Integer>();
-		for (Gallery model : rowset) {
+		for (GalleryVO model : rowset) {
 			idList.add(model.getId());
 		}
 
@@ -193,14 +194,14 @@ public class GalleryProxy extends ProxyModel<Gallery> {
 		});
 	}
 	
-	public void update(final ArrayList<Gallery> rowset, final Category category) {
+	public void update(final ArrayList<GalleryVO> rowset, final CategoryVO category) {
 		final ArrayList<Integer> idList = new ArrayList<Integer>();
-		for (Gallery model : rowset) {
+		for (GalleryVO model : rowset) {
 			idList.add(model.getId());
 		}
 
 		HashMap<String, Object> data = new HashMap<String, Object>();
-		data.put(Gallery.FIELD_CATEGORY_ID, category.getId());
+		data.put(GalleryVO.FIELD_CATEGORY_ID, category.getId());
 
 		clientModel.update(idList, data, new AsyncCallback<Object>() {
 			public void onSuccess(Object result) {
@@ -219,10 +220,19 @@ public class GalleryProxy extends ProxyModel<Gallery> {
 		});
 		
 	}
+	
+	public GalleryVO findBy(ImageVO image) {
+		for (GalleryVO row : getModel()) {
+			if (row.getId() == image.getGalleryId()) {
+				return row;
+			}
+		}
+		return null;
+	}
 
 	public void load(final AsyncCallback<Boolean> asyncCallback) {
-		clientModel.findAll(new AsyncCallback<ArrayList<Gallery>>() {
-			public void onSuccess(ArrayList<Gallery> result) {
+		clientModel.findAll(new AsyncCallback<ArrayList<GalleryVO>>() {
+			public void onSuccess(ArrayList<GalleryVO> result) {
 				setModel(result);
 				asyncCallback.onSuccess(true);
 			}
