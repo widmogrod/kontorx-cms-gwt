@@ -1,8 +1,7 @@
 package info.widmogrod.gwt.kontorx.client.view.category.components;
 
-import info.widmogrod.gwt.kontorx.client.model.Category;
-import info.widmogrod.gwt.library.client.ui.CheckBoxList;
-import info.widmogrod.gwt.library.client.ui.CheckBoxListManager;
+import info.widmogrod.gwt.kontorx.client.model.vo.CategoryVO;
+import info.widmogrod.gwt.library.client.ui.list.CheckBoxListManager;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
@@ -15,7 +14,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class CategoryBlock extends Composite {
 
 	private Button addButton;
-	CheckBoxListManager<Category> checkBoxListManager;
+	CheckBoxListManager<CategoryVO> checkBoxListManager;
 
 	public CategoryBlock() {
 		VerticalPanel verticalPanel = new VerticalPanel();
@@ -37,23 +36,29 @@ public class CategoryBlock extends Composite {
 		horizontalPanel.setCellHorizontalAlignment(addButton, HasHorizontalAlignment.ALIGN_RIGHT);
 		addButton.setText("Dodaj");
 		
-		checkBoxListManager = new CheckBoxListManager<Category>() {
+		checkBoxListManager = new CheckBoxListManager<CategoryVO>() {
 			@Override
-			public void setCheckedByModelRow(Category model) {
-				for (CheckBoxList<Category> ch : list.values()) {
-					if (ch.getModel().getId() == model.getId()) {
-						ch.setChecked(true);
-					} else {
-						ch.setChecked(false);
-					}
-				}
+			public boolean compareObject(CategoryVO o1, CategoryVO o2) {
+				return o1.getId() == o2.getId();
 			}
 		};
+//		{
+//			@Override
+//			public void setCheckedByModelRow(CategoryVO model) {
+//				for (CheckBoxList<CategoryVO> ch : list.values()) {
+//					if (ch.getModel().getId() == model.getId()) {
+//						ch.setChecked(true);
+//					} else {
+//						ch.setChecked(false);
+//					}
+//				}
+//			}
+//		};
 		verticalPanel.add(checkBoxListManager);
 		verticalPanel.setCellWidth(checkBoxListManager, "100%");
 	}
 
-	public CheckBoxListManager<Category> getCheckBoxListManager() {
+	public CheckBoxListManager<CategoryVO> getCheckBoxListManager() {
 		return checkBoxListManager;
 	}
 	public Button getAddButton() {

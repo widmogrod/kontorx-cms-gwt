@@ -1,26 +1,23 @@
-package info.widmogrod.gwt.kontorx.client.view.gallery.components;
+package info.widmogrod.gwt.kontorx.client.view.image.components;
 
-import info.widmogrod.gwt.kontorx.client.model.vo.CategoryVO;
+import info.widmogrod.gwt.kontorx.client.model.ImageProxy;
 import info.widmogrod.gwt.kontorx.client.model.vo.GalleryVO;
-import info.widmogrod.gwt.library.client.BindTextBox;
-import info.widmogrod.gwt.library.client.Bindable;
-import info.widmogrod.gwt.library.client.BindableListener;
-import info.widmogrod.gwt.library.client.Binding;
-import info.widmogrod.gwt.library.client.Binding.Type;
+import info.widmogrod.gwt.kontorx.client.model.vo.ImageVO;
 import info.widmogrod.gwt.library.client.ui.DropDownMenu;
 import info.widmogrod.gwt.library.client.ui.list.CheckBoxListManager;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.TextBox;
 
-public class GalleryForm extends Composite {
+public class ImageForm extends Composite {
 	public enum Mode {
 		SHOW("Edytuj",null),
 		ADD("Dodaj","Usuń"),
@@ -44,28 +41,32 @@ public class GalleryForm extends Composite {
 		}
 	};
 
-	private TextBox nameTextBox;
-	private TextBox urlTextBox;
+	private FormPanel formPanel;
+	
+	private FileUpload imageUpload;
 	private CheckBox publicatedCheckBox;
 
 	private Button cancelButton;
 	private Button deleteButton;
 	private Button actionButton;
 
-	private DropDownMenu categoryDropDownList;
-	private CheckBoxListManager<CategoryVO> categoryBoxListManager;
+	private DropDownMenu galleryDropDownList;
+	private CheckBoxListManager<GalleryVO> categoryBoxListManager;
 
-	public GalleryForm() {
+	public ImageForm() {
+		formPanel = new FormPanel();
+		formPanel.setMethod(FormPanel.METHOD_POST);
+		formPanel.setEncoding(FormPanel.ENCODING_MULTIPART);
+		formPanel.setAction(ImageProxy.FORM_ADD_URL);
+
+		initWidget(formPanel);
+
 		final FlexTable flexTable = new FlexTable();
-		initWidget(flexTable);
+		formPanel.add(flexTable);
+		
 
-		final Label nazwaLabel = new Label("Nazwa");
-		flexTable.setWidget(1, 0, nazwaLabel);
-
-		nameTextBox = new TextBox();
-		flexTable.setWidget(1, 1, nameTextBox);
-		nameTextBox.setText("name");
-		nameTextBox.setWidth("100%");
+		final Label imageLabel = new Label("Grafika");
+		flexTable.setWidget(1, 0, imageLabel);
 
 		final HorizontalPanel horizontalPanel = new HorizontalPanel();
 		horizontalPanel.setWidth("100%");
@@ -81,20 +82,20 @@ public class GalleryForm extends Composite {
 		horizontalPanel.add(cancelButton);
 		cancelButton.setText("Anuluj");
 		
-		categoryDropDownList = new DropDownMenu("Kategoria");
-		horizontalPanel.add(categoryDropDownList);
+		galleryDropDownList = new DropDownMenu("Galeria");
+		horizontalPanel.add(galleryDropDownList);
 
-		categoryBoxListManager = new CheckBoxListManager<CategoryVO>() {
+		categoryBoxListManager = new CheckBoxListManager<GalleryVO>() {
 			@Override
-			public boolean compareObject(CategoryVO o1, CategoryVO o2) {
+			public boolean compareObject(GalleryVO o1, GalleryVO o2) {
 				return o1.getId() == o2.getId();
 			}
 		};
 //		{
 //			@Override
-//			public void setCheckedByModelRow(CategoryVO model) {
+//			public void setCheckedByModelRow(ImageVO model) {
 //				// porownywanie obiektow musi byc po ID by wszystko dzialalo!
-//				for (CheckBoxList<CategoryVO> ch : list.values()) {
+//				for (CheckBoxList<ImageVO> ch : list.values()) {
 //					if (ch.getModel().getId() == model.getId()) {
 //						ch.setChecked(true);
 //					} else {
@@ -103,7 +104,7 @@ public class GalleryForm extends Composite {
 //				}
 //			}
 //		};
-		categoryDropDownList.add(categoryBoxListManager);
+		galleryDropDownList.add(categoryBoxListManager);
 
 //		DropDownList categoryDropDownList2 = new DropDownList("Kategoria 222");
 //		horizontalPanel.add(categoryDropDownList2);
@@ -120,61 +121,37 @@ public class GalleryForm extends Composite {
 		deleteButton.setText(Mode.ADD.getDeleteName());
 
 		final Label label = new Label("Opublikować");
-		flexTable.setWidget(3, 0, label);
+		flexTable.setWidget(2, 0, label);
 
 		publicatedCheckBox = new CheckBox();
-		flexTable.setWidget(3, 1, publicatedCheckBox);
+		publicatedCheckBox.setName("publicated");
 		publicatedCheckBox.setText("Tak");
+		flexTable.setWidget(2, 1, publicatedCheckBox);
 
-		final Label urlLabel = new Label("Url");
-		flexTable.setWidget(2, 0, urlLabel);
-
-		urlTextBox = new TextBox();
-		flexTable.setWidget(2, 1, urlTextBox);
-		urlTextBox.setText("url");
-		urlTextBox.setWidth("100%");
-		
-		Binding binding = new Binding();
-		binding.add(new BindTextBox(nameTextBox), new BindTextBox(urlTextBox, new BindableListener() {
-			public Object onSet(Object value, Bindable sender) {
-				String text = (String) value;
-				text = text.toLowerCase();
-				text = text.replaceAll(" ", "-");
-				return text;
-			}
-		}));
-		binding.bind(Type.LEFT);
+		imageUpload = new FileUpload();
+		imageUpload.setName("photoupload");
+		flexTable.setWidget(1, 1, imageUpload);
 	}
 
-	public TextBox getNameTextBox() {
-		return nameTextBox;
-	}
-
-	private GalleryVO model;
+	private ImageVO model;
 
 	public void cleanModel() {
 		this.model = null;
-		setModel(GalleryVO.get());
+		setModel(ImageVO.get());
 	}
 	
-	public void setModel(GalleryVO model) {
+	public void setModel(ImageVO model) {
 		this.model = model;
-		nameTextBox.setText(model.getName());
-		urlTextBox.setText(model.getUrl());
 		getPublicatedCheckBox().setChecked(model.getPublicated());
 	}
 
-	public GalleryVO getModel() {
-		model.setName(nameTextBox.getText());
-		model.setUrl(urlTextBox.getText());
+	public ImageVO getModel() {
 		model.setPublicated(getPublicatedCheckBox().isChecked());
 		return model;
 	}
 	
-	public GalleryVO getNewModel() {
-		GalleryVO model = GalleryVO.get();
-		model.setName(nameTextBox.getText());
-		model.setUrl(urlTextBox.getText());
+	public ImageVO getNewModel() {
+		ImageVO model = ImageVO.get();
 		model.setPublicated(getPublicatedCheckBox().isChecked());
 		return model;
 	}
@@ -185,28 +162,25 @@ public class GalleryForm extends Composite {
 		switch (mode) {
 			default:
 			case ADD:
-				getCategoryDropDownList().setVisible(false);
-				getNameTextBox().setEnabled(true);
-				getUrlTextBox().setEnabled(true);
+				getGalleryDropDownList().setVisible(false);
 				getActionButton().setText(Mode.ADD.getName());
 				getDeleteButton().setText(Mode.ADD.getDeleteName());
 				getDeleteButton().setEnabled(false);
+				getImageUpload().setVisible(true);
 				break;
 			case UPDATE:
-				getCategoryDropDownList().setVisible(true);
-				getNameTextBox().setEnabled(true);
-				getUrlTextBox().setEnabled(true);
+				getGalleryDropDownList().setVisible(true);
 				getActionButton().setText(Mode.UPDATE.getName());
 				getDeleteButton().setText(Mode.UPDATE.getDeleteName());
 				getDeleteButton().setEnabled(true);
+				getImageUpload().setVisible(true);
 				break;
 			case UPDATE_MULTI:
-				getCategoryDropDownList().setVisible(true);
-				getNameTextBox().setEnabled(false);
-				getUrlTextBox().setEnabled(false);
+				getGalleryDropDownList().setVisible(true);
 				getActionButton().setHTML(Mode.UPDATE_MULTI.getName());
 				getDeleteButton().setText(Mode.UPDATE_MULTI.getDeleteName());
 				getDeleteButton().setEnabled(true);
+				getImageUpload().setVisible(false);
 				break;
 		}
 		this.mode = mode;
@@ -225,16 +199,19 @@ public class GalleryForm extends Composite {
 	public Button getCancelButton() {
 		return cancelButton;
 	}
-	public DropDownMenu getCategoryDropDownList() {
-		return categoryDropDownList;
+	public DropDownMenu getGalleryDropDownList() {
+		return galleryDropDownList;
 	}
-	public CheckBoxListManager<CategoryVO> getCategoryCheckBoxListManager() {
+	public CheckBoxListManager<GalleryVO> getGalleryCheckBoxListManager() {
 		return categoryBoxListManager;
 	}
 	protected CheckBox getPublicatedCheckBox() {
 		return publicatedCheckBox;
 	}
-	public TextBox getUrlTextBox() {
-		return urlTextBox;
+	public FileUpload getImageUpload() {
+		return imageUpload;
+	}
+	public FormPanel getFormPanel() {
+		return formPanel;
 	}
 }

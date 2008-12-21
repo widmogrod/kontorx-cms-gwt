@@ -1,17 +1,17 @@
 package info.widmogrod.gwt.kontorx.client.view.gallery;
 
 import info.widmogrod.gwt.kontorx.client.ApplicationFacade;
-import info.widmogrod.gwt.kontorx.client.model.Category;
 import info.widmogrod.gwt.kontorx.client.model.CategoryProxy;
-import info.widmogrod.gwt.kontorx.client.model.Gallery;
 import info.widmogrod.gwt.kontorx.client.model.GalleryProxy;
+import info.widmogrod.gwt.kontorx.client.model.vo.CategoryVO;
+import info.widmogrod.gwt.kontorx.client.model.vo.GalleryVO;
 import info.widmogrod.gwt.kontorx.client.view.InfoBoxMediator;
 import info.widmogrod.gwt.kontorx.client.view.gallery.components.GalleryForm;
 import info.widmogrod.gwt.kontorx.client.view.gallery.components.GalleryForm.Mode;
-import info.widmogrod.gwt.library.client.ui.CheckBoxList;
-import info.widmogrod.gwt.library.client.ui.CheckBoxListManager;
-import info.widmogrod.gwt.library.client.ui.CheckBoxListRenderCallback;
 import info.widmogrod.gwt.library.client.ui.InfoBox;
+import info.widmogrod.gwt.library.client.ui.interfaces.RenderCallback;
+import info.widmogrod.gwt.library.client.ui.list.CheckBoxList;
+import info.widmogrod.gwt.library.client.ui.list.CheckBoxListManager;
 
 import java.util.ArrayList;
 
@@ -44,7 +44,7 @@ public class GalleryFormMediator extends Mediator {
 						break;
 					case UPDATE_MULTI:
 						GalleryBlockMediator mediator = (GalleryBlockMediator) Facade.getInstance(ApplicationFacade.INIT).retrieveMediator(GalleryBlockMediator.NAME);
-						ArrayList<Gallery> models = mediator.getViewComponent().getCheckBoxListManager().getCheckedModels();
+						ArrayList<GalleryVO> models = mediator.getViewComponent().getCheckBoxListManager().getCheckedModels();
 						proxy.edit(models, view.getModel());
 						break;
 				}
@@ -60,7 +60,7 @@ public class GalleryFormMediator extends Mediator {
 						break;
 					case UPDATE_MULTI:
 						GalleryBlockMediator mediator = (GalleryBlockMediator) Facade.getInstance(ApplicationFacade.INIT).retrieveMediator(GalleryBlockMediator.NAME);
-						ArrayList<Gallery> models = mediator.getViewComponent().getCheckBoxListManager().getCheckedModels();
+						ArrayList<GalleryVO> models = mediator.getViewComponent().getCheckBoxListManager().getCheckedModels();
 						proxy.delete(models);
 						break;
 				}
@@ -74,11 +74,11 @@ public class GalleryFormMediator extends Mediator {
 			}
 		});
 
-		final CheckBoxListManager<Category> manager = view.getCategoryCheckBoxListManager();
+		final CheckBoxListManager<CategoryVO> manager = view.getCategoryCheckBoxListManager();
 
 		// renderowanie odpowiednich nazw
-		manager.setRenderCallback(new CheckBoxListRenderCallback<Category>() {
-			public void onRender(CheckBoxList<Category> component, Category model) {
+		manager.setRenderCallback(new RenderCallback<CheckBoxList<CategoryVO>, CategoryVO>() {
+			public void onRender(CheckBoxList<CategoryVO> component, CategoryVO model) {
 				component.setText(model.getName());
 			}
 		});
@@ -88,10 +88,10 @@ public class GalleryFormMediator extends Mediator {
 			public void onClick(Widget sender) {
 				// zaznaczone galerie
 				GalleryBlockMediator mediator = (GalleryBlockMediator) Facade.getInstance(ApplicationFacade.INIT).retrieveMediator(GalleryBlockMediator.NAME);
-				ArrayList<Gallery> models = mediator.getViewComponent().getCheckBoxListManager().getCheckedModels();
+				ArrayList<GalleryVO> models = mediator.getViewComponent().getCheckBoxListManager().getCheckedModels();
 
 				// przypisz kategorie
-				CheckBoxList<Category> ch = (CheckBoxList<Category>) sender;
+				CheckBoxList<CategoryVO> ch = (CheckBoxList<CategoryVO>) sender;
 				proxy.update(models, ch.getModel());
 
 				if (!ch.isChecked()) {
@@ -169,14 +169,14 @@ public class GalleryFormMediator extends Mediator {
 		if (name == GalleryProxy.BLOCK_ACTION_LOAD
 				|| name == GalleryProxy.GALLERY_UPDATED
 				|| name == GalleryProxy.GALLERY_ADDED) {
-			Gallery gallery = (Gallery) notification.getBody();
+			GalleryVO gallery = (GalleryVO) notification.getBody();
 			view.setMode(Mode.UPDATE);
 			view.setModel(gallery);
 
-			CheckBoxListManager<Category> manager = view.getCategoryCheckBoxListManager();
+			CheckBoxListManager<CategoryVO> manager = view.getCategoryCheckBoxListManager();
 
 			CategoryProxy proxy = getCategoryProxy();
-			Category row = proxy.findBy(gallery);
+			CategoryVO row = proxy.findBy(gallery);
 
 			if (row != null) {
 				manager.setCheckedByModelRow(row);
@@ -186,16 +186,16 @@ public class GalleryFormMediator extends Mediator {
 		} else
 		if (name == GalleryProxy.GALLERY_UPDATED_MULTI) {
 			view.setMode(Mode.UPDATE_MULTI);
-			view.setModel((Gallery) notification.getBody());
+			view.setModel((GalleryVO) notification.getBody());
 		} else
 		if (name == GalleryProxy.GALLERY_UPDATED_CATEGORY) {
-			ArrayList<Gallery> rowset = (ArrayList<Gallery>) notification.getBody();
-			Gallery gallery = rowset.get(0);
+			ArrayList<GalleryVO> rowset = (ArrayList<GalleryVO>) notification.getBody();
+			GalleryVO gallery = rowset.get(0);
 
-			CheckBoxListManager<Category> manager = view.getCategoryCheckBoxListManager();
+			CheckBoxListManager<CategoryVO> manager = view.getCategoryCheckBoxListManager();
 
 			CategoryProxy proxy = getCategoryProxy();
-			Category row = proxy.findBy(gallery);
+			CategoryVO row = proxy.findBy(gallery);
 
 			if (row != null) {
 				manager.setCheckedByModelRow(row);
@@ -222,7 +222,7 @@ public class GalleryFormMediator extends Mediator {
 				|| name == CategoryProxy.CATEGORY_DELETED
 				|| name == CategoryProxy.CATEGORY_DELETED_MULTI) {
 
-			CheckBoxListManager<Category> manager = view.getCategoryCheckBoxListManager();
+			CheckBoxListManager<CategoryVO> manager = view.getCategoryCheckBoxListManager();
 //			manager.setModel(getCategoryProxy().getModel());
 			manager.refresh();
 		}

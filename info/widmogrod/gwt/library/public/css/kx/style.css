@@ -26,3 +26,10 @@
 	display: block;
 	width: 100%;
 }
+
+.kx-ImageListManager {}
+.kx-ImageList {float: left; width: 20%;}
+.kx-ImageList.checked {
+	background: silver;
+}
+.kx-ImageList-Image {}
