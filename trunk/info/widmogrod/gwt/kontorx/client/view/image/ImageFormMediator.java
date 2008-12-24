@@ -8,7 +8,7 @@ import info.widmogrod.gwt.kontorx.client.model.vo.ImageVO;
 import info.widmogrod.gwt.kontorx.client.view.InfoBoxMediator;
 import info.widmogrod.gwt.kontorx.client.view.image.components.ImageForm;
 import info.widmogrod.gwt.kontorx.client.view.image.components.ImageForm.Mode;
-import info.widmogrod.gwt.library.client.ui.InfoBox;
+import info.widmogrod.gwt.library.client.ui.MessageBox;
 import info.widmogrod.gwt.library.client.ui.interfaces.RenderCallback;
 import info.widmogrod.gwt.library.client.ui.list.CheckBoxList;
 import info.widmogrod.gwt.library.client.ui.list.CheckBoxListManager;
@@ -38,7 +38,7 @@ public class ImageFormMediator extends Mediator {
 		view.getFormPanel().addFormHandler(new FormHandler() {
 			public void onSubmit(FormSubmitEvent event) {
 				String message = "Wysyłanie pliku";
-				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, InfoBox.INFO);
+				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.INFO);
 			}
 			public void onSubmitComplete(FormSubmitCompleteEvent event) {
 				proxy.add(event);
@@ -122,7 +122,7 @@ public class ImageFormMediator extends Mediator {
 			}
 			public void onFailure(Throwable caught) {
 				String message = caught.getMessage();
-				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, InfoBox.ERROR);
+				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.ERROR);
 			}
 		});
 	}

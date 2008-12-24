@@ -18,14 +18,17 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class GalleryForm extends Composite {
 	public enum Mode {
-		SHOW("Edytuj",null),
-		ADD("Dodaj","Usuń"),
-		UPDATE("Zapisz","Usuń"),
-		UPDATE_MULTI("Aktualizuj","Usuń zaznaczone");
+		SHOW("Edytuj","Usuń"),
+		SHOW_MULTI("Edytuj","Usuń kategorie"),
+		NEW("Dodaj","Usuń"),
+		EDIT("Zapisz","Usuń"),
+		EDIT_MULTI("Aktualizuj","Usuń zaznaczone");
 
 		private String name;
 		private String delete;
@@ -44,6 +47,7 @@ public class GalleryForm extends Composite {
 		}
 	};
 
+	private FlexTable editContentTable;
 	private TextBox nameTextBox;
 	private TextBox urlTextBox;
 	private CheckBox publicatedCheckBox;
@@ -56,26 +60,20 @@ public class GalleryForm extends Composite {
 	private CheckBoxListManager<CategoryVO> categoryBoxListManager;
 
 	public GalleryForm() {
-		final FlexTable flexTable = new FlexTable();
-		initWidget(flexTable);
-
-		final Label nazwaLabel = new Label("Nazwa");
-		flexTable.setWidget(1, 0, nazwaLabel);
-
-		nameTextBox = new TextBox();
-		flexTable.setWidget(1, 1, nameTextBox);
-		nameTextBox.setText("name");
-		nameTextBox.setWidth("100%");
+		VerticalPanel verticalPanel = new VerticalPanel();
+		initWidget(verticalPanel);
+		verticalPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_RIGHT);
+		verticalPanel.setWidth("100%");
 
 		final HorizontalPanel horizontalPanel = new HorizontalPanel();
+		verticalPanel.add(horizontalPanel);
+		verticalPanel.setCellVerticalAlignment(horizontalPanel, HasVerticalAlignment.ALIGN_TOP);
 		horizontalPanel.setWidth("100%");
-		flexTable.setWidget(0, 1, horizontalPanel);
-		flexTable.getCellFormatter().setWidth(0, 1, "100%");
-		flexTable.getCellFormatter().setVerticalAlignment(0, 1, HasVerticalAlignment.ALIGN_TOP);
+		horizontalPanel.setStyleName("kx-NavigationBar");
 
 		actionButton = new Button();
 		horizontalPanel.add(actionButton);
-		actionButton.setText(Mode.ADD.getName());
+		actionButton.setText(Mode.NEW.getName());
 
 		cancelButton = new Button();
 		horizontalPanel.add(cancelButton);
@@ -83,6 +81,7 @@ public class GalleryForm extends Composite {
 		
 		categoryDropDownList = new DropDownMenu("Kategoria");
 		horizontalPanel.add(categoryDropDownList);
+		horizontalPanel.setCellVerticalAlignment(categoryDropDownList, HasVerticalAlignment.ALIGN_MIDDLE);
 
 		categoryBoxListManager = new CheckBoxListManager<CategoryVO>() {
 			@Override
@@ -105,32 +104,46 @@ public class GalleryForm extends Composite {
 //		};
 		categoryDropDownList.add(categoryBoxListManager);
 
+		final SimplePanel simplePanel = new SimplePanel();
+		horizontalPanel.add(simplePanel);
+
+		deleteButton = new Button();
+		horizontalPanel.add(deleteButton);
+		horizontalPanel.setCellHorizontalAlignment(deleteButton, HasHorizontalAlignment.ALIGN_RIGHT);
+		horizontalPanel.setCellVerticalAlignment(deleteButton, HasVerticalAlignment.ALIGN_MIDDLE);
+		horizontalPanel.setCellWidth(deleteButton, "100%");
+		deleteButton.setEnabled(false);
+		deleteButton.setText(Mode.NEW.getDeleteName());
+
 //		DropDownList categoryDropDownList2 = new DropDownList("Kategoria 222");
 //		horizontalPanel.add(categoryDropDownList2);
 //		categoryDropDownList2.add(new CheckBoxListManager<Category>());
 		
-		final HorizontalPanel horizontalPanel_1 = new HorizontalPanel();
-		horizontalPanel.add(horizontalPanel_1);
-		horizontalPanel.setCellHorizontalAlignment(horizontalPanel_1, HasHorizontalAlignment.ALIGN_RIGHT);
-		horizontalPanel.setCellWidth(horizontalPanel_1, "100%");
+		editContentTable = new FlexTable();
+		verticalPanel.add(editContentTable);
+		verticalPanel.setCellVerticalAlignment(editContentTable, HasVerticalAlignment.ALIGN_TOP);
+		editContentTable.setWidth("100%");
 
-		deleteButton = new Button();
-		horizontalPanel_1.add(deleteButton);
-		deleteButton.setEnabled(false);
-		deleteButton.setText(Mode.ADD.getDeleteName());
+		final Label nazwaLabel = new Label("Nazwa");
+		editContentTable.setWidget(0, 0, nazwaLabel);
+
+		nameTextBox = new TextBox();
+		editContentTable.setWidget(0, 1, nameTextBox);
+		nameTextBox.setText("name");
+		nameTextBox.setWidth("100%");
 
 		final Label label = new Label("Opublikować");
-		flexTable.setWidget(3, 0, label);
+		editContentTable.setWidget(2, 0, label);
 
 		publicatedCheckBox = new CheckBox();
-		flexTable.setWidget(3, 1, publicatedCheckBox);
+		editContentTable.setWidget(2, 1, publicatedCheckBox);
 		publicatedCheckBox.setText("Tak");
 
 		final Label urlLabel = new Label("Url");
-		flexTable.setWidget(2, 0, urlLabel);
+		editContentTable.setWidget(1, 0, urlLabel);
 
 		urlTextBox = new TextBox();
-		flexTable.setWidget(2, 1, urlTextBox);
+		editContentTable.setWidget(1, 1, urlTextBox);
 		urlTextBox.setText("url");
 		urlTextBox.setWidth("100%");
 		
@@ -179,34 +192,53 @@ public class GalleryForm extends Composite {
 		return model;
 	}
 	
-	private Mode mode = Mode.ADD;
+	private Mode mode = Mode.NEW;
 	
 	public void setMode(Mode mode) {
 		switch (mode) {
 			default:
-			case ADD:
+			case SHOW:
+				getCategoryDropDownList().setVisible(true);
+				getActionButton().setText(Mode.SHOW.getName());
+				getDeleteButton().setText(Mode.SHOW.getDeleteName());
+				getDeleteButton().setEnabled(true);
+				getDeleteButton().setVisible(true);
+				getEditContentTable().setVisible(false);
+				break;
+			case SHOW_MULTI:
+				getCategoryDropDownList().setVisible(true);
+				getActionButton().setText(Mode.SHOW_MULTI.getName());
+				getDeleteButton().setText(Mode.SHOW_MULTI.getDeleteName());
+				getDeleteButton().setEnabled(true);
+				getDeleteButton().setVisible(true);
+				getEditContentTable().setVisible(false);
+				break;
+			case NEW:
 				getCategoryDropDownList().setVisible(false);
 				getNameTextBox().setEnabled(true);
 				getUrlTextBox().setEnabled(true);
-				getActionButton().setText(Mode.ADD.getName());
-				getDeleteButton().setText(Mode.ADD.getDeleteName());
-				getDeleteButton().setEnabled(false);
+				getActionButton().setText(Mode.NEW.getName());
+				getDeleteButton().setText(Mode.NEW.getDeleteName());
+				getDeleteButton().setVisible(false);
+				getEditContentTable().setVisible(true);
 				break;
-			case UPDATE:
-				getCategoryDropDownList().setVisible(true);
+			case EDIT:
+				getCategoryDropDownList().setVisible(false);
 				getNameTextBox().setEnabled(true);
 				getUrlTextBox().setEnabled(true);
-				getActionButton().setText(Mode.UPDATE.getName());
-				getDeleteButton().setText(Mode.UPDATE.getDeleteName());
-				getDeleteButton().setEnabled(true);
+				getActionButton().setText(Mode.EDIT.getName());
+				getDeleteButton().setText(Mode.EDIT.getDeleteName());
+				getDeleteButton().setVisible(false);
+				getEditContentTable().setVisible(true);
 				break;
-			case UPDATE_MULTI:
-				getCategoryDropDownList().setVisible(true);
+			case EDIT_MULTI:
+				getCategoryDropDownList().setVisible(false);
 				getNameTextBox().setEnabled(false);
 				getUrlTextBox().setEnabled(false);
-				getActionButton().setHTML(Mode.UPDATE_MULTI.getName());
-				getDeleteButton().setText(Mode.UPDATE_MULTI.getDeleteName());
-				getDeleteButton().setEnabled(true);
+				getActionButton().setHTML(Mode.EDIT_MULTI.getName());
+				getDeleteButton().setText(Mode.EDIT_MULTI.getDeleteName());
+				getDeleteButton().setVisible(false);
+				getEditContentTable().setVisible(true);
 				break;
 		}
 		this.mode = mode;
@@ -236,5 +268,8 @@ public class GalleryForm extends Composite {
 	}
 	public TextBox getUrlTextBox() {
 		return urlTextBox;
+	}
+	protected FlexTable getEditContentTable() {
+		return editContentTable;
 	}
 }

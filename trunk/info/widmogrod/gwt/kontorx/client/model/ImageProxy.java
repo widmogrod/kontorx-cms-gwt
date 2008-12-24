@@ -5,7 +5,7 @@ import info.widmogrod.gwt.kontorx.client.model.vo.ImageVO;
 import info.widmogrod.gwt.kontorx.client.view.InfoBoxMediator;
 import info.widmogrod.gwt.library.client.db.xmlrpc.XmlRpcDbTableDecorator;
 import info.widmogrod.gwt.library.client.puremvc.patterns.ProxyModel;
-import info.widmogrod.gwt.library.client.ui.InfoBox;
+import info.widmogrod.gwt.library.client.ui.MessageBox;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -108,10 +108,10 @@ public class ImageProxy extends ProxyModel<ImageVO> {
 			sendNotification(IMAGE_ADDED, row, null);
 
 			String message = "Plik został dodany";
-			sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, InfoBox.INFO);
+			sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.INFO);
 		} else {
 			String message = "Plik nie został dodany";
-			sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, InfoBox.ERROR);
+			sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.ERROR);
 		}
 
 //		clientModel.insert(row.getData(), new AsyncCallback<Integer>() {
@@ -141,12 +141,12 @@ public class ImageProxy extends ProxyModel<ImageVO> {
 				sendNotification(IMAGE_DELETED, row, null);
 
 				String message = "Grafika została usunięta";
-				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, InfoBox.INFO);
+				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.INFO);
 			}
 
 			public void onFailure(Throwable caught) {
 				String message = caught.getMessage();
-				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, InfoBox.ERROR);
+				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.ERROR);
 			}
 		});
 	}
@@ -164,12 +164,12 @@ public class ImageProxy extends ProxyModel<ImageVO> {
 				sendNotification(IMAGE_DELETED_MULTI, null, null);
 
 				String message = "Grafiki zostały usunięte";
-				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, InfoBox.INFO);
+				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.INFO);
 			}
 
 			public void onFailure(Throwable caught) {
 				String message = caught.getMessage();
-				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, InfoBox.ERROR);
+				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.ERROR);
 			}
 		});
 	}
@@ -182,12 +182,12 @@ public class ImageProxy extends ProxyModel<ImageVO> {
 				sendNotification(IMAGE_UPDATED, row, null);
 
 				String message = "Zmiany w grafikach zostały zapisane";
-				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, InfoBox.INFO);
+				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.INFO);
 			}
 
 			public void onFailure(Throwable caught) {
 				String message = caught.getMessage();
-				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, InfoBox.ERROR);
+				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.ERROR);
 			}
 		});
 	}
@@ -205,12 +205,12 @@ public class ImageProxy extends ProxyModel<ImageVO> {
 				sendNotification(IMAGE_UPDATED_MULTI, row, null);
 
 				String message = "Zmiany w grafikach zostały zapisane";
-				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, InfoBox.INFO);
+				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.INFO);
 			}
 
 			public void onFailure(Throwable caught) {
 				String message = caught.getMessage();
-				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, InfoBox.ERROR);
+				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.ERROR);
 			}
 		});
 	}
@@ -231,12 +231,12 @@ public class ImageProxy extends ProxyModel<ImageVO> {
 				sendNotification(IMAGE_UPDATED_GALLERY, rowset, null);
 
 				String message = "Grafiki zostały przypisane do galerii " + gallery.getName();
-				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, InfoBox.INFO);
+				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.INFO);
 			}
 
 			public void onFailure(Throwable caught) {
 				String message = caught.getMessage();
-				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, InfoBox.ERROR);
+				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.ERROR);
 			}
 		});
 		
@@ -263,7 +263,7 @@ public class ImageProxy extends ProxyModel<ImageVO> {
 				asyncCallback.onFailure(caught);
 
 				String message = caught.getMessage();
-				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, InfoBox.ERROR);
+				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.ERROR);
 			}
 		});
 	}

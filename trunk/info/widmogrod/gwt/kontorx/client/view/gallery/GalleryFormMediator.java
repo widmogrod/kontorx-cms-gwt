@@ -8,7 +8,7 @@ import info.widmogrod.gwt.kontorx.client.model.vo.GalleryVO;
 import info.widmogrod.gwt.kontorx.client.view.InfoBoxMediator;
 import info.widmogrod.gwt.kontorx.client.view.gallery.components.GalleryForm;
 import info.widmogrod.gwt.kontorx.client.view.gallery.components.GalleryForm.Mode;
-import info.widmogrod.gwt.library.client.ui.InfoBox;
+import info.widmogrod.gwt.library.client.ui.MessageBox;
 import info.widmogrod.gwt.library.client.ui.interfaces.RenderCallback;
 import info.widmogrod.gwt.library.client.ui.list.CheckBoxList;
 import info.widmogrod.gwt.library.client.ui.list.CheckBoxListManager;
@@ -19,6 +19,7 @@ import org.puremvc.java.multicore.interfaces.INotification;
 import org.puremvc.java.multicore.patterns.facade.Facade;
 import org.puremvc.java.multicore.patterns.mediator.Mediator;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
@@ -36,13 +37,19 @@ public class GalleryFormMediator extends Mediator {
 			public void onClick(Widget sender) {
 				switch (view.getMode()) {
 					default:
-					case ADD:
+					case SHOW:
+						sendNotification(GalleryProxy.BLOCK_ACTION_EDIT, view.getModel(), null);
+						break;
+					case SHOW_MULTI:
+						sendNotification(GalleryProxy.BLOCK_ACTION_EDIT_MULTI, null, null);
+						break;
+					case NEW:
 						proxy.add(view.getNewModel());
 						break;
-					case UPDATE:
+					case EDIT:
 						proxy.edit(view.getModel());
 						break;
-					case UPDATE_MULTI:
+					case EDIT_MULTI:
 						GalleryBlockMediator mediator = (GalleryBlockMediator) Facade.getInstance(ApplicationFacade.INIT).retrieveMediator(GalleryBlockMediator.NAME);
 						ArrayList<GalleryVO> models = mediator.getViewComponent().getCheckBoxListManager().getCheckedModels();
 						proxy.edit(models, view.getModel());
@@ -54,17 +61,18 @@ public class GalleryFormMediator extends Mediator {
 		
 		view.getDeleteButton().addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
-				switch (view.getMode()) {
-					case UPDATE:
+				if (Window.confirm("Czy chczesz usunąć galerię?")) {
+					switch (view.getMode()) {
+					case SHOW:
 						proxy.delete(view.getModel());
 						break;
-					case UPDATE_MULTI:
+					case SHOW_MULTI:
 						GalleryBlockMediator mediator = (GalleryBlockMediator) Facade.getInstance(ApplicationFacade.INIT).retrieveMediator(GalleryBlockMediator.NAME);
 						ArrayList<GalleryVO> models = mediator.getViewComponent().getCheckBoxListManager().getCheckedModels();
 						proxy.delete(models);
 						break;
+					}
 				}
-				
 			}
 		});
 		
@@ -109,7 +117,7 @@ public class GalleryFormMediator extends Mediator {
 			}
 			public void onFailure(Throwable caught) {
 				String message = caught.getMessage();
-				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, InfoBox.ERROR);
+				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.ERROR);
 			}
 		});
 	}
@@ -143,14 +151,17 @@ public class GalleryFormMediator extends Mediator {
 	public String[] listNotificationInterests() {
 		return new String[] {
 				// Gallery
+				GalleryProxy.BLOCK_ACTION_NEW,
+				GalleryProxy.BLOCK_ACTION_SELECT,
+				GalleryProxy.BLOCK_ACTION_SELECT_MULTI,
+				GalleryProxy.BLOCK_ACTION_EDIT,
+				GalleryProxy.BLOCK_ACTION_EDIT_MULTI,
 				GalleryProxy.GALLERY_ADDED,
-				GalleryProxy.GALLERY_DELETED,
+//				GalleryProxy.GALLERY_DELETED,
 				GalleryProxy.GALLERY_UPDATED,
 				GalleryProxy.GALLERY_UPDATED_MULTI,
-				GalleryProxy.BLOCK_ACTION_NEW,
-				GalleryProxy.BLOCK_ACTION_LOAD,
-				GalleryProxy.BLOCK_ACTION_LOAD_MULTI,
 				GalleryProxy.GALLERY_UPDATED_CATEGORY,
+				
 				// Category
 				CategoryProxy.CATEGORY_ADDED,
 				CategoryProxy.CATEGORY_UPDATED,
@@ -166,15 +177,19 @@ public class GalleryFormMediator extends Mediator {
 		
 		GalleryForm view = getViewComponent();
 		
-		if (name == GalleryProxy.BLOCK_ACTION_LOAD
-				|| name == GalleryProxy.GALLERY_UPDATED
-				|| name == GalleryProxy.GALLERY_ADDED) {
+		if (name == GalleryProxy.BLOCK_ACTION_NEW) {
+			view.setMode(Mode.NEW);
+			view.cleanModel();
+		} else
+		if (name == GalleryProxy.BLOCK_ACTION_SELECT
+				|| name == GalleryProxy.GALLERY_ADDED
+				|| name == GalleryProxy.GALLERY_UPDATED) {
 			GalleryVO gallery = (GalleryVO) notification.getBody();
-			view.setMode(Mode.UPDATE);
+			view.setMode(Mode.SHOW);
 			view.setModel(gallery);
 
+			// zaznaczenie przypisanej galerii
 			CheckBoxListManager<CategoryVO> manager = view.getCategoryCheckBoxListManager();
-
 			CategoryProxy proxy = getCategoryProxy();
 			CategoryVO row = proxy.findBy(gallery);
 
@@ -184,9 +199,19 @@ public class GalleryFormMediator extends Mediator {
 				manager.setChecked(false);
 			}
 		} else
-		if (name == GalleryProxy.GALLERY_UPDATED_MULTI) {
-			view.setMode(Mode.UPDATE_MULTI);
+		if (name == GalleryProxy.BLOCK_ACTION_SELECT_MULTI
+				|| name == CategoryProxy.CATEGORY_UPDATED_MULTI) {
+			view.setMode(Mode.SHOW_MULTI);
+			// TODO czy czyszczenie modelu?
+			view.cleanModel();
+		} else
+		if (name == GalleryProxy.BLOCK_ACTION_EDIT) {
+			view.setMode(Mode.EDIT);
 			view.setModel((GalleryVO) notification.getBody());
+		} else
+		if (name == GalleryProxy.BLOCK_ACTION_EDIT_MULTI) {
+			view.setMode(Mode.EDIT_MULTI);
+			view.cleanModel();
 		} else
 		if (name == GalleryProxy.GALLERY_UPDATED_CATEGORY) {
 			ArrayList<GalleryVO> rowset = (ArrayList<GalleryVO>) notification.getBody();
@@ -203,19 +228,6 @@ public class GalleryFormMediator extends Mediator {
 				manager.setChecked(false);
 			}
 		} else
-		if (name == GalleryProxy.GALLERY_DELETED) {
-			view.setMode(Mode.ADD);
-			view.cleanModel();
-		} else
-		if (name == GalleryProxy.BLOCK_ACTION_NEW
-				|| name == GalleryProxy.GALLERY_DELETED_MULTI) {
-			view.setMode(Mode.ADD);
-			view.cleanModel();
-		} else
-		if (name == GalleryProxy.BLOCK_ACTION_LOAD_MULTI) {
-			view.setMode(Mode.UPDATE_MULTI);
-			view.cleanModel();
-		} else
 		if (name == CategoryProxy.CATEGORY_ADDED
 				|| name == CategoryProxy.CATEGORY_UPDATED
 				|| name == CategoryProxy.CATEGORY_UPDATED_MULTI
@@ -223,7 +235,6 @@ public class GalleryFormMediator extends Mediator {
 				|| name == CategoryProxy.CATEGORY_DELETED_MULTI) {
 
 			CheckBoxListManager<CategoryVO> manager = view.getCategoryCheckBoxListManager();
-//			manager.setModel(getCategoryProxy().getModel());
 			manager.refresh();
 		}
 	}

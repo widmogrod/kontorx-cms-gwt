@@ -10,6 +10,19 @@
 	width: 20opx;
 }
 .kx-EditPanel {}
+.kx-NavigationBar {
+	padding: 5px;
+	background-color: #4C88BE;
+}
+.kx-Hyperlink-option {
+	font-size:.7em;
+	color: #D9DB56;
+}
+.kx-FlowPanel-left {
+	float:left; margin-right:5px;
+}
+
+.kx-ImageList {float: left; width: 15%;  height: 70px;}
 
 /*
 .gwt-Button {}

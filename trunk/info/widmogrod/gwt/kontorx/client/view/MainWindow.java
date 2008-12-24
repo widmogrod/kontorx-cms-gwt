@@ -3,87 +3,89 @@ package info.widmogrod.gwt.kontorx.client.view;
 import info.widmogrod.gwt.kontorx.client.view.category.components.CategoryBlock;
 import info.widmogrod.gwt.kontorx.client.view.gallery.components.GalleryBlock;
 import info.widmogrod.gwt.kontorx.client.view.image.components.ImageBlock;
-import info.widmogrod.gwt.library.client.ui.InfoBox;
+import info.widmogrod.gwt.library.client.ui.MessageBox;
 
+import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DecoratorPanel;
-import com.google.gwt.user.client.ui.DockPanel;
-import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.ui.HTMLTable.CellFormatter;
 
 public class MainWindow extends Composite {
-	DockPanel dockPanel;
-	private FlexTable eastFlexTable;
-	private FlexTable westFlexTable;
-	private FlexTable northFlexTable;
-	private DecoratorPanel decoratorPanel3;
-	
+	private SimplePanel messageSimplePanel;
+	private SimplePanel imageSimplePanel;
+	private SimplePanel infoSimplePanel;
+	private SimplePanel gallerySimplePanel;
+	private SimplePanel categorySimplePanel;
 	public MainWindow() {
-		dockPanel = new DockPanel();
-		initWidget(dockPanel);
-
-		northFlexTable = new FlexTable();
-		dockPanel.add(northFlexTable, DockPanel.NORTH);
-
-		//
-		DecoratorPanel decoratorPanel1 = new DecoratorPanel();
-		eastFlexTable = new FlexTable();
-		decoratorPanel1.setWidget(eastFlexTable);
-
-		dockPanel.add(decoratorPanel1, DockPanel.WEST);
-		dockPanel.setCellWidth(decoratorPanel1, "215px");
-		dockPanel.setCellHorizontalAlignment(decoratorPanel1, DockPanel.ALIGN_LEFT);
-		dockPanel.setCellVerticalAlignment(decoratorPanel1, DockPanel.ALIGN_TOP);
-
-		// 
-		DecoratorPanel decoratorPanel2 = new DecoratorPanel();
-		westFlexTable = new FlexTable();
-		decoratorPanel2.setWidget(westFlexTable);
+		final AbsolutePanel absolutePanel = new AbsolutePanel();
+		initWidget(absolutePanel);
 		
-		dockPanel.add(decoratorPanel2, DockPanel.EAST);
-		dockPanel.setCellWidth(decoratorPanel2, "400px");
-		dockPanel.setCellHorizontalAlignment(decoratorPanel2, DockPanel.ALIGN_RIGHT);
-		dockPanel.setCellVerticalAlignment(decoratorPanel2, DockPanel.ALIGN_TOP);
+		messageSimplePanel = new SimplePanel();
+		absolutePanel.add(messageSimplePanel);
 		
-		decoratorPanel3 = new DecoratorPanel();
-		dockPanel.add(decoratorPanel3, DockPanel.CENTER);
-		dockPanel.setCellWidth(decoratorPanel3, "300px");
-		dockPanel.setCellHorizontalAlignment(decoratorPanel3, DockPanel.ALIGN_RIGHT);
-		dockPanel.setCellVerticalAlignment(decoratorPanel3, DockPanel.ALIGN_TOP);
+		VerticalPanel leftVerticalPanel = new VerticalPanel();
+
+		categorySimplePanel = new SimplePanel();
+		leftVerticalPanel.add(categorySimplePanel);
+
+		gallerySimplePanel = new SimplePanel();
+		leftVerticalPanel.add(gallerySimplePanel);
+		
+		DecoratorPanel decoratorPanel_1 = new DecoratorPanel();
+		decoratorPanel_1.setWidget(leftVerticalPanel);
+		leftVerticalPanel.setWidth("150px");
+		absolutePanel.add(decoratorPanel_1);
+		
+		DecoratorPanel decoratorPanel_2 = new DecoratorPanel();
+		absolutePanel.add(decoratorPanel_2, 170, 0);
+
+		imageSimplePanel = new SimplePanel();
+		decoratorPanel_2.setWidget(imageSimplePanel);
+		imageSimplePanel.setWidth("360px");
+
+		DecoratorPanel decoratorPanel_3 = new DecoratorPanel();
+		absolutePanel.add(decoratorPanel_3, 550, 0);
+
+		infoSimplePanel = new SimplePanel();
+		decoratorPanel_3.setWidget(infoSimplePanel);
+		infoSimplePanel.setWidth("250px");
 	}
 
-	public void setInfoBox(InfoBox widget) {
-		northFlexTable.setWidget(0, 0, widget);
+	public void setMessageBox(MessageBox widget) {
+		getMessageSimplePanel().setWidget(widget);
 	}
 
-	public void setEditPanel(Widget widget) {
-		westFlexTable.setWidget(0, 0, widget);
-		CellFormatter cf = eastFlexTable.getCellFormatter();
-		cf.setAlignment(0, 0, HasHorizontalAlignment.ALIGN_LEFT, HasVerticalAlignment.ALIGN_TOP);
-		cf.setStyleName(0, 0, "kx-EditPanel");
+	public void setInfoPanel(Widget widget) {
+		getInfoSimplePanel().setWidget(widget);
 	}
 	
 	public void setCategoryBlock(CategoryBlock widget) {
-		eastFlexTable.setWidget(1, 0, widget);
-		widget.setWidth("200px");
-		CellFormatter cf = eastFlexTable.getCellFormatter();
-		cf.setAlignment(1, 0, HasHorizontalAlignment.ALIGN_LEFT, HasVerticalAlignment.ALIGN_TOP);
-		cf.setStyleName(1, 0, "kx-GalleryBlock");
+		getCategorySimplePanel().setWidget(widget);
 	}
 
 	public void setGalleryBlock(GalleryBlock widget) {
-		eastFlexTable.setWidget(2, 0, widget);
-		widget.setWidth("200px");
-		CellFormatter cf = eastFlexTable.getCellFormatter();
-		cf.setAlignment(2, 0, HasHorizontalAlignment.ALIGN_LEFT, HasVerticalAlignment.ALIGN_TOP);
-		cf.setStyleName(2, 0, "kx-GalleryBlock");
+		getGallerySimplePanel().setWidget(widget);
 	}
 	
 	public void setImageBlock(ImageBlock widget) {
-		decoratorPanel3.setWidget(widget);
-		widget.setWidth("290px");
+		getImageSimplePanel().setWidget(widget);
+	}
+
+	protected SimplePanel getCategorySimplePanel() {
+		return categorySimplePanel;
+	}
+	protected SimplePanel getGallerySimplePanel() {
+		return gallerySimplePanel;
+	}
+	protected SimplePanel getInfoSimplePanel() {
+		return infoSimplePanel;
+	}
+	protected SimplePanel getImageSimplePanel() {
+		return imageSimplePanel;
+	}
+	protected SimplePanel getMessageSimplePanel() {
+		return messageSimplePanel;
 	}
 }

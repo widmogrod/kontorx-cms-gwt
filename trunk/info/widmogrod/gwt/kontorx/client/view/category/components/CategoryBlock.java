@@ -19,19 +19,24 @@ public class CategoryBlock extends Composite {
 	public CategoryBlock() {
 		VerticalPanel verticalPanel = new VerticalPanel();
 		initWidget(verticalPanel);
+		verticalPanel.setWidth("100%");
 		
 		final HorizontalPanel horizontalPanel = new HorizontalPanel();
 		verticalPanel.add(horizontalPanel);
+		horizontalPanel.setStyleName("kx-NavigationBar");
 		horizontalPanel.setWidth("100%");
 		verticalPanel.setCellWidth(horizontalPanel, "100%");
 		
 		Label name = new Label("Kategorie");
 		horizontalPanel.add(name);
+		horizontalPanel.setCellHorizontalAlignment(name, HasHorizontalAlignment.ALIGN_LEFT);
+		horizontalPanel.setCellWidth(name, "100%");
 		horizontalPanel.setCellVerticalAlignment(name, HasVerticalAlignment.ALIGN_MIDDLE);
 		name.setStyleName("kx-header-2");
 
 		addButton = new Button();
 		horizontalPanel.add(addButton);
+		horizontalPanel.setCellWidth(addButton, "100%");
 		horizontalPanel.setCellVerticalAlignment(addButton, HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel.setCellHorizontalAlignment(addButton, HasHorizontalAlignment.ALIGN_RIGHT);
 		addButton.setText("Dodaj");
@@ -56,6 +61,7 @@ public class CategoryBlock extends Composite {
 //		};
 		verticalPanel.add(checkBoxListManager);
 		verticalPanel.setCellWidth(checkBoxListManager, "100%");
+		setWidth("100%");
 	}
 
 	public CheckBoxListManager<CategoryVO> getCheckBoxListManager() {

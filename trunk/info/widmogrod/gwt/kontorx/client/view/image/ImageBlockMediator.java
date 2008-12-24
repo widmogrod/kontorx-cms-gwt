@@ -5,7 +5,7 @@ import info.widmogrod.gwt.kontorx.client.model.ImageProxy;
 import info.widmogrod.gwt.kontorx.client.model.vo.ImageVO;
 import info.widmogrod.gwt.kontorx.client.view.InfoBoxMediator;
 import info.widmogrod.gwt.kontorx.client.view.image.components.ImageBlock;
-import info.widmogrod.gwt.library.client.ui.InfoBox;
+import info.widmogrod.gwt.library.client.ui.MessageBox;
 import info.widmogrod.gwt.library.client.ui.list.ImageList;
 import info.widmogrod.gwt.library.client.ui.list.ImageListManager;
 
@@ -14,7 +14,9 @@ import org.puremvc.java.multicore.patterns.facade.Facade;
 import org.puremvc.java.multicore.patterns.mediator.Mediator;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 
 public class ImageBlockMediator extends Mediator {
@@ -23,13 +25,30 @@ public class ImageBlockMediator extends Mediator {
 	public ImageBlockMediator(ImageBlock view) {
 		super(NAME, view);
 	
+		final ImageListManager<ImageVO> manager = view.getListManager();
+
 		view.getAddButton().addClickListener(new ClickListener(){
 			public void onClick(Widget sender) {
 				sendNotification(ImageProxy.BLOCK_ACTION_NEW, null, null);
 			}
 		});
 		
-		final ImageListManager<ImageVO> manager = view.getListManager();
+		view.getActionsBox().addChangeListener(new ChangeListener(){
+			public void onChange(Widget sender) {
+				ListBox list = (ListBox) sender;
+				String value = list.getValue(list.getSelectedIndex());
+
+				if (ImageBlock.Actions.SELECT_ALL.getValue() == value) {
+					manager.setChecked(true);
+				} else
+				if (ImageBlock.Actions.SELECT_NONE.getValue() == value) {
+					manager.setChecked(false);
+				} else
+				if (ImageBlock.Actions.SELECT_FLIP.getValue() == value) {
+					manager.setCheckedFlip();
+				}
+			}
+		});
 		
 		manager.setClickListner(new ClickListener(){
 			@SuppressWarnings("unchecked")
@@ -58,7 +77,7 @@ public class ImageBlockMediator extends Mediator {
 			}
 			public void onFailure(Throwable caught) {
 				String message = caught.getMessage();
-				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, InfoBox.ERROR);
+				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.ERROR);
 			}
 		});
 	}
@@ -93,13 +112,21 @@ public class ImageBlockMediator extends Mediator {
 	@Override
 	public void handleNotification(INotification notification) {
 		String name = notification.getName();
-		if (name == ImageProxy.IMAGE_ADDED
-				|| name == ImageProxy.IMAGE_DELETED
+		
+		ImageListManager<ImageVO> manager = getViewComponent().getListManager();
+		
+		if (name == ImageProxy.IMAGE_ADDED) {
+			manager.refresh();
+			// zaznaczenie dodanego rekordu
+			ImageVO row = (ImageVO) notification.getBody();
+			manager.setCheckedByModelRow(row);
+		} else
+		if (name == ImageProxy.IMAGE_DELETED
 				|| name == ImageProxy.IMAGE_DELETED_MULTI
 				|| name == ImageProxy.IMAGE_UPDATED
 				|| name == ImageProxy.IMAGE_UPDATED_MULTI
 				|| name == ImageProxy.IMAGE_UPDATED_GALLERY) {
-			getViewComponent().getListManager().refresh();
+			manager.refresh();
 		}
 	}
 }

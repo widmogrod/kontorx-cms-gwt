@@ -1,10 +1,10 @@
-.kx-InfoBox {position: absolute; top: 0; left: 40%;}
+.kx-MessageBox {position: absolute; top: 0; left: 40%;}
 
-.kx-InfoBox .kx-InfoBox-info,
-.kx-InfoBox .kx-InfoBox-error {padding: 5px; margin-bottom: 1px; text-align: center;}
+.kx-MessageBox .kx-MessageBox-info,
+.kx-MessageBox .kx-MessageBox-error {padding: 5px; margin-bottom: 1px; text-align: center;}
 
-.kx-InfoBox .kx-InfoBox-info  {background-color: #FAB81E;}
-.kx-InfoBox .kx-InfoBox-error {background-color: #BA1A1A;}
+.kx-MessageBox .kx-MessageBox-info  {background-color: #FAB81E;}
+.kx-MessageBox .kx-MessageBox-error {background-color: #BA1A1A;}
 
 .kx-DropDownList {}
 
@@ -28,7 +28,7 @@
 }
 
 .kx-ImageListManager {}
-.kx-ImageList {float: left; width: 20%;}
+.kx-ImageList {}
 .kx-ImageList.checked {
 	background: silver;
 }

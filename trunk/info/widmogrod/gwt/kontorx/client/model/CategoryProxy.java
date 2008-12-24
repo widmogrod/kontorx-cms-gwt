@@ -5,7 +5,7 @@ import info.widmogrod.gwt.kontorx.client.model.vo.GalleryVO;
 import info.widmogrod.gwt.kontorx.client.view.InfoBoxMediator;
 import info.widmogrod.gwt.library.client.db.xmlrpc.XmlRpcDbTableDecorator;
 import info.widmogrod.gwt.library.client.puremvc.patterns.ProxyModel;
-import info.widmogrod.gwt.library.client.ui.InfoBox;
+import info.widmogrod.gwt.library.client.ui.MessageBox;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -23,9 +23,11 @@ public class CategoryProxy extends ProxyModel<CategoryVO> {
 
 	// Notifications
 	public static final String BLOCK_ACTION_NEW = "CategoryProxy_BLOCK_ACTION_NEW";
+	public static final String BLOCK_ACTION_SELECT = "CategoryProxy_BLOCK_ACTION_SELECT";
+	public static final String BLOCK_ACTION_SELECT_MULTI = "CategoryProxy_BLOCK_ACTION_SELECT_MULTI";
 	public static final String BLOCK_ACTION_CANCEL = "CategoryProxy_BLOCK_ACTION_CANCEL";
-	public static final String BLOCK_ACTION_LOAD = "CategoryProxy_BLOCK_ACTION_LOAD";
-	public static final String BLOCK_ACTION_LOAD_MULTI = "CategoryProxy_BLOCK_ACTION_LOAD_MULTI";
+	public static final String BLOCK_ACTION_EDIT = "CategoryProxy_BLOCK_ACTION_EDIT";
+	public static final String BLOCK_ACTION_EDIT_MULTI = "CategoryProxy_BLOCK_ACTION_EDIT_MULTI";
 	public static final String CATEGORY_ADDED = "CategoryProxy_CATEGORY_ADDED";
 	public static final String CATEGORY_DELETED = "CategoryProxy_CATEGORY_DELETED";
 	public static final String CATEGORY_DELETED_MULTI = "CategoryProxy_CATEGORY_DELETED_MULTI";
@@ -89,12 +91,12 @@ public class CategoryProxy extends ProxyModel<CategoryVO> {
 				sendNotification(CATEGORY_ADDED, row, null);
 
 				String message = "Kategoria została dodana";
-				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, InfoBox.INFO);
+				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.INFO);
 			}
 
 			public void onFailure(Throwable caught) {
 				String message = caught.getMessage();
-				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, InfoBox.ERROR);
+				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.ERROR);
 			}
 		});
 	}
@@ -107,12 +109,12 @@ public class CategoryProxy extends ProxyModel<CategoryVO> {
 				sendNotification(CATEGORY_DELETED, row, null);
 
 				String message = "Kategoria została usunięta";
-				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, InfoBox.INFO);
+				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.INFO);
 			}
 
 			public void onFailure(Throwable caught) {
 				String message = caught.getMessage();
-				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, InfoBox.ERROR);
+				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.ERROR);
 			}
 		});
 	}
@@ -130,12 +132,12 @@ public class CategoryProxy extends ProxyModel<CategoryVO> {
 				sendNotification(CATEGORY_DELETED_MULTI, null, null);
 
 				String message = "Kategorie zostały usunięte";
-				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, InfoBox.INFO);
+				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.INFO);
 			}
 
 			public void onFailure(Throwable caught) {
 				String message = caught.getMessage();
-				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, InfoBox.ERROR);
+				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.ERROR);
 			}
 		});
 	}
@@ -148,12 +150,12 @@ public class CategoryProxy extends ProxyModel<CategoryVO> {
 				sendNotification(CATEGORY_UPDATED, row, null);
 
 				String message = "Zmiany w kategoriach zostały zapisane";
-				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, InfoBox.INFO);
+				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.INFO);
 			}
 
 			public void onFailure(Throwable caught) {
 				String message = caught.getMessage();
-				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, InfoBox.ERROR);
+				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.ERROR);
 			}
 		});
 	}
@@ -171,12 +173,12 @@ public class CategoryProxy extends ProxyModel<CategoryVO> {
 				sendNotification(CATEGORY_UPDATED_MULTI, row, null);
 
 				String message = "Zmiany w kategoriach zostały zapisane";
-				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, InfoBox.INFO);
+				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.INFO);
 			}
 
 			public void onFailure(Throwable caught) {
 				String message = caught.getMessage();
-				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, InfoBox.ERROR);
+				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.ERROR);
 			}
 		});
 	}
@@ -201,7 +203,7 @@ public class CategoryProxy extends ProxyModel<CategoryVO> {
 				asyncCallback.onFailure(caught);
 
 				String message = caught.getMessage();
-				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, InfoBox.ERROR);
+				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.ERROR);
 			}
 		});
 	}

@@ -15,7 +15,7 @@ import info.widmogrod.gwt.kontorx.client.view.image.ImageBlockMediator;
 import info.widmogrod.gwt.kontorx.client.view.image.ImageFormMediator;
 import info.widmogrod.gwt.kontorx.client.view.image.components.ImageBlock;
 import info.widmogrod.gwt.kontorx.client.view.image.components.ImageForm;
-import info.widmogrod.gwt.library.client.ui.InfoBox;
+import info.widmogrod.gwt.library.client.ui.MessageBox;
 
 import org.puremvc.java.multicore.interfaces.INotification;
 import org.puremvc.java.multicore.patterns.command.SimpleCommand;
@@ -35,8 +35,8 @@ public class InitViewCommand extends SimpleCommand {
 		facade.registerMediator(new MainWindowMediator(mainWindow));
 
 		// InfoBox
-		InfoBox infoBox = new InfoBox();
-		mainWindow.setInfoBox(infoBox);
+		MessageBox infoBox = new MessageBox();
+		mainWindow.setMessageBox(infoBox);
 		facade.registerMediator(new InfoBoxMediator(infoBox));
 
 		// CategoryBlock
