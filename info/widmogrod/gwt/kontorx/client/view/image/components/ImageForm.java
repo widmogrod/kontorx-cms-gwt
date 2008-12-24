@@ -10,12 +10,12 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FileUpload;
-import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class ImageForm extends Composite {
 	public enum Mode {
@@ -60,30 +60,29 @@ public class ImageForm extends Composite {
 		formPanel.setAction(ImageProxy.FORM_ADD_URL);
 
 		initWidget(formPanel);
-
-		final FlexTable flexTable = new FlexTable();
-		formPanel.add(flexTable);
-		
-
-		final Label imageLabel = new Label("Grafika");
-		flexTable.setWidget(1, 0, imageLabel);
+		VerticalPanel verticalPanel = new VerticalPanel();
+		formPanel.add(verticalPanel);
+		verticalPanel.setWidth("100%");
 
 		final HorizontalPanel horizontalPanel = new HorizontalPanel();
+		verticalPanel.add(horizontalPanel);
 		horizontalPanel.setWidth("100%");
-		flexTable.setWidget(0, 1, horizontalPanel);
-		flexTable.getCellFormatter().setWidth(0, 1, "100%");
-		flexTable.getCellFormatter().setVerticalAlignment(0, 1, HasVerticalAlignment.ALIGN_TOP);
+		horizontalPanel.setStyleName("kx-NavigationBar");
 
 		actionButton = new Button();
 		horizontalPanel.add(actionButton);
+		horizontalPanel.setCellHorizontalAlignment(actionButton, HasHorizontalAlignment.ALIGN_LEFT);
 		actionButton.setText(Mode.ADD.getName());
 
 		cancelButton = new Button();
 		horizontalPanel.add(cancelButton);
+		horizontalPanel.setCellHorizontalAlignment(cancelButton, HasHorizontalAlignment.ALIGN_LEFT);
 		cancelButton.setText("Anuluj");
 		
 		galleryDropDownList = new DropDownMenu("Galeria");
 		horizontalPanel.add(galleryDropDownList);
+		horizontalPanel.setCellVerticalAlignment(galleryDropDownList, HasVerticalAlignment.ALIGN_TOP);
+		horizontalPanel.setCellHorizontalAlignment(galleryDropDownList, HasHorizontalAlignment.ALIGN_CENTER);
 
 		categoryBoxListManager = new CheckBoxListManager<GalleryVO>() {
 			@Override
@@ -106,31 +105,35 @@ public class ImageForm extends Composite {
 //		};
 		galleryDropDownList.add(categoryBoxListManager);
 
-//		DropDownList categoryDropDownList2 = new DropDownList("Kategoria 222");
-//		horizontalPanel.add(categoryDropDownList2);
-//		categoryDropDownList2.add(new CheckBoxListManager<Category>());
-		
-		final HorizontalPanel horizontalPanel_1 = new HorizontalPanel();
-		horizontalPanel.add(horizontalPanel_1);
-		horizontalPanel.setCellHorizontalAlignment(horizontalPanel_1, HasHorizontalAlignment.ALIGN_RIGHT);
-		horizontalPanel.setCellWidth(horizontalPanel_1, "100%");
-
 		deleteButton = new Button();
-		horizontalPanel_1.add(deleteButton);
+		horizontalPanel.add(deleteButton);
+		horizontalPanel.setCellHorizontalAlignment(deleteButton, HasHorizontalAlignment.ALIGN_RIGHT);
+		horizontalPanel.setCellWidth(deleteButton, "100%");
 		deleteButton.setEnabled(false);
 		deleteButton.setText(Mode.ADD.getDeleteName());
 
-		final Label label = new Label("Opublikować");
-		flexTable.setWidget(2, 0, label);
-
-		publicatedCheckBox = new CheckBox();
-		publicatedCheckBox.setName("publicated");
-		publicatedCheckBox.setText("Tak");
-		flexTable.setWidget(2, 1, publicatedCheckBox);
+		final VerticalPanel verticalPanel_1 = new VerticalPanel();
+		verticalPanel.add(verticalPanel_1);
+		verticalPanel.setCellVerticalAlignment(verticalPanel_1, HasVerticalAlignment.ALIGN_TOP);
 
 		imageUpload = new FileUpload();
+		verticalPanel_1.add(imageUpload);
 		imageUpload.setName("photoupload");
-		flexTable.setWidget(1, 1, imageUpload);
+
+		final HorizontalPanel horizontalPanel_1 = new HorizontalPanel();
+		verticalPanel_1.add(horizontalPanel_1);
+
+//		DropDownList categoryDropDownList2 = new DropDownList("Kategoria 222");
+//		horizontalPanel.add(categoryDropDownList2);
+//		categoryDropDownList2.add(new CheckBoxListManager<Category>());
+
+		final Label label = new Label("Opublikować");
+		horizontalPanel_1.add(label);
+
+		publicatedCheckBox = new CheckBox();
+		horizontalPanel_1.add(publicatedCheckBox);
+		publicatedCheckBox.setName("publicated");
+		publicatedCheckBox.setText("Tak");
 	}
 
 	private ImageVO model;

@@ -138,6 +138,12 @@ public class ImageListManager<T extends JavaScriptObject> extends Composite {
 		}
 	}
 	
+	public void setCheckedFlip() {
+		for (ImageList<T> ch : list.values()) {
+			ch.setChecked(!ch.isChecked());
+		}
+	}
+	
 	public void setCheckedByModelRow(T row) {
 		for (T m : list.keySet()) {
 			if (compareObject(m, row)) {

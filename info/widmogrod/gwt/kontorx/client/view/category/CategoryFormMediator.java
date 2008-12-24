@@ -12,6 +12,7 @@ import org.puremvc.java.multicore.interfaces.INotification;
 import org.puremvc.java.multicore.patterns.facade.Facade;
 import org.puremvc.java.multicore.patterns.mediator.Mediator;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -28,13 +29,19 @@ public class CategoryFormMediator extends Mediator {
 			public void onClick(Widget sender) {
 				switch (view.getMode()) {
 					default:
-					case ADD:
+					case SHOW:
+						sendNotification(CategoryProxy.BLOCK_ACTION_EDIT, view.getModel(), null);
+						break;
+					case SHOW_MULTI:
+						sendNotification(CategoryProxy.BLOCK_ACTION_EDIT_MULTI, null, null);
+						break;
+					case NEW:
 						proxy.add(view.getNewModel());
 						break;
-					case UPDATE:
+					case EDIT:
 						proxy.edit(view.getModel());
 						break;
-					case UPDATE_MULTI:
+					case EDIT_MULTI:
 						CategoryBlockMediator mediator = (CategoryBlockMediator) Facade.getInstance(ApplicationFacade.INIT).retrieveMediator(CategoryBlockMediator.NAME);
 						ArrayList<CategoryVO> models = mediator.getViewComponent().getCheckBoxListManager().getCheckedModels();
 						proxy.edit(models, view.getModel());
@@ -46,17 +53,18 @@ public class CategoryFormMediator extends Mediator {
 		
 		view.getDeleteButton().addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
-				switch (view.getMode()) {
-					case UPDATE:
+				if (Window.confirm("Czy chczesz usunąć kategorię?")) {
+					switch (view.getMode()) {
+					case SHOW:
 						proxy.delete(view.getModel());
 						break;
-					case UPDATE_MULTI:
+					case SHOW_MULTI:
 						CategoryBlockMediator mediator = (CategoryBlockMediator) Facade.getInstance(ApplicationFacade.INIT).retrieveMediator(CategoryBlockMediator.NAME);
 						ArrayList<CategoryVO> models = mediator.getViewComponent().getCheckBoxListManager().getCheckedModels();
 						proxy.delete(models);
 						break;
+					}
 				}
-				
 			}
 		});
 		
@@ -85,42 +93,55 @@ public class CategoryFormMediator extends Mediator {
 	@Override
 	public String[] listNotificationInterests() {
 		return new String[] {
+//				CategoryProxy.CATEGORY_DELETED,
+//				CategoryProxy.CATEGORY_DELETED_MULTI,
 				CategoryProxy.CATEGORY_ADDED,
-				CategoryProxy.CATEGORY_DELETED,
 				CategoryProxy.CATEGORY_UPDATED,
-				CategoryProxy.CATEGORY_UPDATED_MULTI,
+				// TODO Może dodać wczytywanie kategorii
+//				CategoryProxy.CATEGORY_UPDATED_MULTI,
 				CategoryProxy.BLOCK_ACTION_NEW,
-				CategoryProxy.BLOCK_ACTION_LOAD,
-				CategoryProxy.BLOCK_ACTION_LOAD_MULTI};
+				CategoryProxy.BLOCK_ACTION_SELECT,
+				CategoryProxy.BLOCK_ACTION_SELECT_MULTI,
+				CategoryProxy.BLOCK_ACTION_EDIT,
+				CategoryProxy.BLOCK_ACTION_EDIT_MULTI};
 	}
 	
 	@Override
 	public void handleNotification(INotification notification) {
+		String name = notification.getName();
+
 		CategoryForm view = getViewComponent();
 		
-		String name = notification.getName();
-		if (name == CategoryProxy.BLOCK_ACTION_LOAD
-				|| name == CategoryProxy.CATEGORY_UPDATED
-				|| name == CategoryProxy.CATEGORY_ADDED) {
-			view.setMode(Mode.UPDATE);
-			view.setModel((CategoryVO) notification.getBody());
-		} else
-		if (name == CategoryProxy.CATEGORY_DELETED_MULTI) {
-			view.setMode(Mode.UPDATE_MULTI);
-			view.setModel((CategoryVO) notification.getBody());
-		} else
-		if (name == CategoryProxy.CATEGORY_DELETED) {
-			view.setMode(Mode.ADD);
-			view.cleanModel();
-		} else
-		if (name == CategoryProxy.BLOCK_ACTION_NEW
-				|| name == CategoryProxy.CATEGORY_DELETED_MULTI) {
-			view.setMode(Mode.ADD);
-			view.cleanModel();
-		} else
-		if (name == CategoryProxy.BLOCK_ACTION_LOAD_MULTI) {
-			view.setMode(Mode.UPDATE_MULTI);
+		if (name == CategoryProxy.BLOCK_ACTION_NEW) {
+			view.setMode(Mode.NEW);
 			view.cleanModel();
 		}
+		if (name == CategoryProxy.BLOCK_ACTION_SELECT
+				|| name == CategoryProxy.CATEGORY_ADDED
+				|| name == CategoryProxy.CATEGORY_UPDATED) {
+			view.setMode(Mode.SHOW);
+			view.setModel((CategoryVO) notification.getBody());
+		} else
+		if (name == CategoryProxy.BLOCK_ACTION_SELECT_MULTI
+				|| name == CategoryProxy.CATEGORY_UPDATED) {
+			view.setMode(Mode.SHOW_MULTI);
+			view.cleanModel();
+		} else
+		if (name == CategoryProxy.BLOCK_ACTION_EDIT) {
+			view.setMode(Mode.EDIT);
+			view.setModel((CategoryVO) notification.getBody());
+		} else
+		if (name == CategoryProxy.BLOCK_ACTION_EDIT_MULTI) {
+			view.setMode(Mode.EDIT_MULTI);
+			view.cleanModel();
+		}
+//		if (name == CategoryProxy.CATEGORY_DELETED_MULTI) {
+//			view.setMode(Mode.UPDATE_MULTI);
+//			view.setModel((CategoryVO) notification.getBody());
+//		} else
+//		if (name == CategoryProxy.CATEGORY_DELETED) {
+//			view.setMode(Mode.ADD);
+//			view.cleanModel();
+//		} else
 	}
 }
