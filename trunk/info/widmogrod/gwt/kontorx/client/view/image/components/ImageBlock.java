@@ -7,13 +7,13 @@ import info.widmogrod.gwt.library.client.ui.list.ImageListManager;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class ImageBlock extends Composite {
@@ -39,7 +39,6 @@ public class ImageBlock extends Composite {
 		}
 	};
 	
-	private HTML actionLinkShowFreeImage;
 	private ListBox actionsBox;
 	public static final String IMAGE_URL_THUMB = "upload/gallery/thumb/";
 
@@ -60,34 +59,42 @@ public class ImageBlock extends Composite {
 
 		final Label grafikiLabel = new Label("Grafiki");
 		horizontalPanel.add(grafikiLabel);
-		horizontalPanel.setCellWidth(grafikiLabel, "100px");
+		grafikiLabel.setWidth("100px");
+		horizontalPanel.setCellHorizontalAlignment(grafikiLabel, HasHorizontalAlignment.ALIGN_RIGHT);
 		horizontalPanel.setCellVerticalAlignment(grafikiLabel, HasVerticalAlignment.ALIGN_MIDDLE);
 		grafikiLabel.setStyleName("kx-header-2");
 
-		final FlowPanel flowPanel = new FlowPanel();
-		horizontalPanel.add(flowPanel);
-		horizontalPanel.setCellHorizontalAlignment(flowPanel, HasHorizontalAlignment.ALIGN_CENTER);
-		horizontalPanel.setCellVerticalAlignment(flowPanel, HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel.setCellWidth(flowPanel, "100%");
-
 		actionsBox = new ListBox();
-		flowPanel.add(actionsBox);
+		horizontalPanel.add(actionsBox);
+		horizontalPanel.setCellVerticalAlignment(actionsBox, HasVerticalAlignment.ALIGN_MIDDLE);
+		horizontalPanel.setCellHorizontalAlignment(actionsBox, HasHorizontalAlignment.ALIGN_CENTER);
+		horizontalPanel.setCellWidth(actionsBox, "100%");
 
 		actionsBox.addItem(Actions.NONE.getName(), Actions.NONE.getValue());
 		actionsBox.addItem(Actions.SELECT_ALL.getName(), Actions.SELECT_ALL.getValue());
 		actionsBox.addItem(Actions.SELECT_NONE.getName(), Actions.SELECT_NONE.getValue());
 		actionsBox.addItem(Actions.SELECT_FLIP.getName(), Actions.SELECT_FLIP.getValue());
-
-		actionLinkShowFreeImage = new HTML("New <i>HTML</i> panel");
-		flowPanel.add(actionLinkShowFreeImage);
-		actionLinkShowFreeImage.setStyleName("kx-Hyperlink-option");
-		actionLinkShowFreeImage.setText("Pokaż nieprzypisane");
 		
 		addButton = new Button("Dodaj");
 		horizontalPanel.add(addButton);
 		horizontalPanel.setCellWidth(addButton, "60px");
 		horizontalPanel.setCellHorizontalAlignment(addButton, HasHorizontalAlignment.ALIGN_LEFT);
 		horizontalPanel.setCellVerticalAlignment(addButton, HasVerticalAlignment.ALIGN_TOP);
+
+		final ScrollPanel scrollPanel = new ScrollPanel();
+		verticalPanel.add(scrollPanel);
+		scrollPanel.setHeight("390px");
+		verticalPanel.setCellWidth(scrollPanel, "100%");
+
+		final VerticalPanel verticalPanel_1 = new VerticalPanel();
+		scrollPanel.setWidget(verticalPanel_1);
+		verticalPanel_1.setSize("100%", "100%");
+
+		final HTML html = new HTML("New <i>HTML</i> panel");
+		verticalPanel_1.add(html);
+		verticalPanel_1.setCellVerticalAlignment(html, HasVerticalAlignment.ALIGN_TOP);
+		html.setStyleName("kx-HTML-info");
+		html.setText("Poniżej znajdują się grafiki nieprzypisane do żadnej galerii lub grafiki należące do jednej z wybranych galerii");
 		
 		list = new ImageListManager<ImageVO>() {
 			@Override
@@ -95,6 +102,9 @@ public class ImageBlock extends Composite {
 				return o1.getId() == o2.getId();
 			}
 		};
+		verticalPanel_1.add(list);
+		verticalPanel_1.setCellVerticalAlignment(list, HasVerticalAlignment.ALIGN_TOP);
+		list.setSize("100%", "100%");
 		
 		list.setRenderCallback(new RenderCallback<ImageList<ImageVO>, ImageVO>() {
 			public void onRender(ImageList<ImageVO> widget, ImageVO model) {
@@ -102,7 +112,6 @@ public class ImageBlock extends Composite {
 			};
 		});
 
-		verticalPanel.add(list);
 		list.setStyleName("kx-MenuListManager");
 	}
 
@@ -114,8 +123,5 @@ public class ImageBlock extends Composite {
 	}
 	public ListBox getActionsBox() {
 		return actionsBox;
-	}
-	public HTML getActionLinkShowFreeImage() {
-		return actionLinkShowFreeImage;
 	}
 }

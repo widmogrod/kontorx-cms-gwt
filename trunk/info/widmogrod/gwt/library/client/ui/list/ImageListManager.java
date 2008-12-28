@@ -102,6 +102,10 @@ public class ImageListManager<T extends JavaScriptObject> extends Composite {
 		return model.getModel();
 	}
 
+	public HashMap<T, ImageList<T>> getList() {
+		return list;
+	}
+	
 	public int getCountChecked() {
 		int count = 0;
 		for (ImageList<T> ch : list.values()) {

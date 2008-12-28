@@ -25,7 +25,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class GalleryForm extends Composite {
 	public enum Mode {
 		SHOW("Edytuj","Usuń"),
-		SHOW_MULTI("Edytuj","Usuń kategorie"),
+		SHOW_MULTI("Edytuj","Usuń galerie"),
 		NEW("Dodaj","Usuń"),
 		EDIT("Zapisz","Usuń"),
 		EDIT_MULTI("Aktualizuj","Usuń zaznaczone");
@@ -81,7 +81,7 @@ public class GalleryForm extends Composite {
 		
 		categoryDropDownList = new DropDownMenu("Kategoria");
 		horizontalPanel.add(categoryDropDownList);
-		horizontalPanel.setCellVerticalAlignment(categoryDropDownList, HasVerticalAlignment.ALIGN_MIDDLE);
+		horizontalPanel.setCellVerticalAlignment(categoryDropDownList, HasVerticalAlignment.ALIGN_TOP);
 
 		categoryBoxListManager = new CheckBoxListManager<CategoryVO>() {
 			@Override

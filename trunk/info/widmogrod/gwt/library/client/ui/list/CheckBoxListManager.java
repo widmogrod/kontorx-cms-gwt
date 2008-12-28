@@ -102,6 +102,10 @@ public class CheckBoxListManager<T extends JavaScriptObject> extends Composite {
 	public ArrayList<T> getModel() {
 		return model.getModel();
 	}
+	
+	public HashMap<T, CheckBoxList<T>> getList() {
+		return list;
+	}
 
 	public int getCountChecked() {
 		int count = 0;

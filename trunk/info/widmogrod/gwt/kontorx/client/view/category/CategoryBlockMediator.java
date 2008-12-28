@@ -1,21 +1,16 @@
 package info.widmogrod.gwt.kontorx.client.view.category;
 
-import info.widmogrod.gwt.kontorx.client.ApplicationFacade;
 import info.widmogrod.gwt.kontorx.client.model.CategoryProxy;
 import info.widmogrod.gwt.kontorx.client.model.GalleryProxy;
 import info.widmogrod.gwt.kontorx.client.model.vo.CategoryVO;
-import info.widmogrod.gwt.kontorx.client.view.InfoBoxMediator;
 import info.widmogrod.gwt.kontorx.client.view.category.components.CategoryBlock;
-import info.widmogrod.gwt.library.client.ui.MessageBox;
 import info.widmogrod.gwt.library.client.ui.interfaces.RenderCallback;
 import info.widmogrod.gwt.library.client.ui.list.CheckBoxList;
 import info.widmogrod.gwt.library.client.ui.list.CheckBoxListManager;
 
 import org.puremvc.java.multicore.interfaces.INotification;
-import org.puremvc.java.multicore.patterns.facade.Facade;
 import org.puremvc.java.multicore.patterns.mediator.Mediator;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -54,34 +49,34 @@ public class CategoryBlockMediator extends Mediator {
 						sendNotification(CategoryProxy.BLOCK_ACTION_SELECT, ch.getModel(), null);
 					} else {
 						// nie ma zadnych zaznaczonych, czyli usun widok formularza
-						sendNotification(CategoryProxy.BLOCK_ACTION_CANCEL, null, null);
+						sendNotification(CategoryProxy.BLOCK_ACTION_SELECT_NONE, null, null);
 					}
 				}
 			}
 		});
 		
-		CategoryProxy proxy = getCategoryProxy();
-		manager.setModel(proxy);
-		proxy.load(new AsyncCallback<Boolean>() {
-			public void onSuccess(Boolean result) {
-				manager.render();
-			}
-			public void onFailure(Throwable caught) {
-				String message = caught.getMessage();
-				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.ERROR);
-			}
-		});
+//		CategoryProxy proxy = getCategoryProxy();
+//		manager.setModel(proxy);
+//		proxy.load(new AsyncCallback<Boolean>() {
+//			public void onSuccess(Boolean result) {
+//				manager.render();
+//			}
+//			public void onFailure(Throwable caught) {
+//				String message = caught.getMessage();
+//				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.ERROR);
+//			}
+//		});
 	}
 
-	private CategoryProxy categoryProxy;
-	
-	private CategoryProxy getCategoryProxy() {
-		if (null == categoryProxy) {
-			// TODO bardzo dziwne nie dziala getFacade() ..
-			categoryProxy = (CategoryProxy) Facade.getInstance(ApplicationFacade.INIT).retrieveProxy(CategoryProxy.NAME);
-		}
-		return categoryProxy;
-	}
+//	private CategoryProxy categoryProxy;
+//	
+//	private CategoryProxy getCategoryProxy() {
+//		if (null == categoryProxy) {
+//			// TODO bardzo dziwne nie dziala getFacade() ..
+//			categoryProxy = (CategoryProxy) Facade.getInstance(ApplicationFacade.INIT).retrieveProxy(CategoryProxy.NAME);
+//		}
+//		return categoryProxy;
+//	}
 	
 	@Override
 	public CategoryBlock getViewComponent() {
@@ -98,7 +93,6 @@ public class CategoryBlockMediator extends Mediator {
 				CategoryProxy.CATEGORY_UPDATED,
 				CategoryProxy.CATEGORY_UPDATED_MULTI,
 				// Gallery
-				GalleryProxy.BLOCK_ACTION_SELECT,
 				GalleryProxy.BLOCK_ACTION_SELECT_MULTI};
 	}
 	
@@ -120,8 +114,7 @@ public class CategoryBlockMediator extends Mediator {
 				|| name == CategoryProxy.CATEGORY_DELETED_MULTI) {
 			manager.refresh();
 		} else
-		if (name == GalleryProxy.BLOCK_ACTION_SELECT
-				|| name == GalleryProxy.BLOCK_ACTION_SELECT_MULTI) {
+		if (name == GalleryProxy.BLOCK_ACTION_SELECT_MULTI) {
 			// odznaczamy zaznaczenia
 			manager.setChecked(false);
 		}

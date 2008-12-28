@@ -34,16 +34,16 @@ public class XmlRpcDbTableDecorator<T extends JavaScriptObject> {
 				JSONValue v = JSONParser.parse(response);
 				JSONArray a = v.isArray();
 				
-				ArrayList<T> rowset2 = new ArrayList<T>();
+				ArrayList<T> rowset = new ArrayList<T>();
 
 				if (a != null) {
 					JsArray<T> jsArray = (JsArray<T>) a.getJavaScriptObject();
 					for (int i = 0; i < jsArray.length(); i++) {
-						rowset2.add(jsArray.get(i));
+						rowset.add(jsArray.get(i));
 					}
 				}
 
-				callback.onSuccess(rowset2);
+				callback.onSuccess(rowset);
 			}
 
 			public void onFailure(Throwable caught) {

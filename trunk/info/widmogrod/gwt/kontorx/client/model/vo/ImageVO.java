@@ -14,6 +14,12 @@ public class ImageVO extends JavaScriptObject {
 
 	public final native String getImage() /*-{ return this.image; }-*/;
 	public final native void setImage(String image) /*-{ this.image = image; }-*/;
+	
+	public final native String getName() /*-{ return this.name; }-*/;
+	public final native void setName(String name) /*-{ this.name = name; }-*/;
+	
+	public final native String getDescription() /*-{ return this.description; }-*/;
+	public final native void setDescription(String description) /*-{ this.description = description; }-*/;
 
 	public final native int getUserId() /*-{ return this.user_id; }-*/;
 	
@@ -30,6 +36,8 @@ public class ImageVO extends JavaScriptObject {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("id", getId());		
 		map.put("image", getImage());
+		map.put("name", getName());
+		map.put("description", getDescription());
 		map.put("user_id", getUserId());
 		map.put("gallery_id", getGalleryId());
 		map.put("publicated", getPublicated() ? "1" : "0");

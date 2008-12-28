@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class GalleryBlock extends Composite {
@@ -40,18 +41,20 @@ public class GalleryBlock extends Composite {
 		horizontalPanel.setCellVerticalAlignment(addButton, HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel.setCellHorizontalAlignment(addButton, HasHorizontalAlignment.ALIGN_RIGHT);
 		addButton.setText("Dodaj");
+
+		final ScrollPanel scrollPanel = new ScrollPanel();
+		verticalPanel.add(scrollPanel);
+		scrollPanel.setSize("100%", "200px");
 		
-		checkBoxListManager = new CheckBoxListManager<GalleryVO>();
-		// TODO Może to przypadek ale gdy dodam zawartosc ponizej
-		// nie pokauje sie w form - kategorie
-//		{
-//			@Override
-//			public boolean compareObject(GalleryVO o1, GalleryVO o2) {
-//				return o1.getId() == o2.getId();
-//			}
-//		};
-		verticalPanel.add(checkBoxListManager);
-		verticalPanel.setCellWidth(checkBoxListManager, "100%");
+		checkBoxListManager = new CheckBoxListManager<GalleryVO>() {
+			@Override
+			public boolean compareObject(GalleryVO o1, GalleryVO o2) {
+				return o1.getId() == o2.getId();
+			}
+		};
+		scrollPanel.setWidget(checkBoxListManager);
+		checkBoxListManager.setSize("100%", "100%");
+		
 		setWidth("100%");
 	}
 

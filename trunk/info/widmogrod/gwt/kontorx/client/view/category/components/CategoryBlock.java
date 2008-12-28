@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class CategoryBlock extends Composite {
@@ -40,6 +41,9 @@ public class CategoryBlock extends Composite {
 		horizontalPanel.setCellVerticalAlignment(addButton, HasVerticalAlignment.ALIGN_MIDDLE);
 		horizontalPanel.setCellHorizontalAlignment(addButton, HasHorizontalAlignment.ALIGN_RIGHT);
 		addButton.setText("Dodaj");
+
+		final ScrollPanel scrollPanel = new ScrollPanel();
+		verticalPanel.add(scrollPanel);
 		
 		checkBoxListManager = new CheckBoxListManager<CategoryVO>() {
 			@Override
@@ -47,9 +51,8 @@ public class CategoryBlock extends Composite {
 				return o1.getId() == o2.getId();
 			}
 		};
-//		{
-//			@Override
-//			public void setCheckedByModelRow(CategoryVO model) {
+		scrollPanel.setWidget(checkBoxListManager);
+		checkBoxListManager.setSize("100%", "150px");
 //				for (CheckBoxList<CategoryVO> ch : list.values()) {
 //					if (ch.getModel().getId() == model.getId()) {
 //						ch.setChecked(true);
@@ -59,8 +62,6 @@ public class CategoryBlock extends Composite {
 //				}
 //			}
 //		};
-		verticalPanel.add(checkBoxListManager);
-		verticalPanel.setCellWidth(checkBoxListManager, "100%");
 		setWidth("100%");
 	}
 
