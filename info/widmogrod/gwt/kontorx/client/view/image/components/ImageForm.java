@@ -15,7 +15,7 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RichTextArea;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -44,7 +44,9 @@ public class ImageForm extends Composite {
 		}
 	};
 
-	private RichTextArea descriptionRichTextArea;
+	private Label nazwaLabel;
+	private Label descriptionLabel;
+	private TextArea descriptionTextArea;
 	private TextBox nameTextBox;
 	private VerticalPanel contextPanel;
 	private FormPanel formPanel;
@@ -126,33 +128,29 @@ public class ImageForm extends Composite {
 		contextPanel.add(imageUpload);
 		imageUpload.setName("photoupload");
 
-		final HorizontalPanel horizontalPanel_1 = new HorizontalPanel();
-		contextPanel.add(horizontalPanel_1);
-
 //		DropDownList categoryDropDownList2 = new DropDownList("Kategoria 222");
 //		horizontalPanel.add(categoryDropDownList2);
 //		categoryDropDownList2.add(new CheckBoxListManager<Category>());
 
 		publicatedCheckBox = new CheckBox();
-		horizontalPanel_1.add(publicatedCheckBox);
+		contextPanel.add(publicatedCheckBox);
 		publicatedCheckBox.setName("publicated");
 		publicatedCheckBox.setText("Opublikuj grafikę");
 
-		final Label nazwaLabel = new Label("Nazwa");
-		verticalPanel.add(nazwaLabel);
+		nazwaLabel = new Label("Nazwa");
+		contextPanel.add(nazwaLabel);
 
 		nameTextBox = new TextBox();
-		verticalPanel.add(nameTextBox);
+		contextPanel.add(nameTextBox);
 		nameTextBox.setText("");
 
-		final Label opisGrafikiLabel = new Label("Opis grafiki");
-		verticalPanel.add(opisGrafikiLabel);
+		descriptionLabel = new Label("Opis grafiki");
+		contextPanel.add(descriptionLabel);
 
-		descriptionRichTextArea = new RichTextArea();
-		verticalPanel.add(descriptionRichTextArea);
-		descriptionRichTextArea.setWidth("100%");
-		verticalPanel.setCellWidth(descriptionRichTextArea, "100%");
-		descriptionRichTextArea.setText("");
+		descriptionTextArea = new TextArea();
+		contextPanel.add(descriptionTextArea);
+		descriptionTextArea.setSize("100%", "150px");
+		descriptionTextArea.setText("");
 	}
 
 	private ImageVO model;
@@ -166,13 +164,13 @@ public class ImageForm extends Composite {
 		this.model = model;
 		getPublicatedCheckBox().setChecked(model.getPublicated());
 		getNameTextBox().setText(model.getName());
-		getDescriptionRichTextArea().setHTML(model.getDescription());
+		getDescriptionTextArea().setText(model.getDescription());
 	}
 
 	public ImageVO getModel() {
 		model.setPublicated(getPublicatedCheckBox().isChecked());
-		model.setName(getNameTextBox().getName());
-		model.setDescription(getDescriptionRichTextArea().getHTML());
+		model.setName(getNameTextBox().getText());
+		model.setDescription(getDescriptionTextArea().getText());
 		return model;
 	}
 	
@@ -196,6 +194,7 @@ public class ImageForm extends Composite {
 				getDeleteButton().setText(Mode.SHOW.getDeleteName());
 				getDeleteButton().setVisible(true);
 				getContextPanel().setVisible(false);
+				getNazwaLabel().setVisible(false);
 				break;
 			case SHOW_MULTI:
 				getGalleryDropDownList().setVisible(true);
@@ -212,8 +211,11 @@ public class ImageForm extends Composite {
 				getContextPanel().setVisible(true);
 				getImageUpload().setVisible(true);
 				getPublicatedCheckBox().setVisible(false);
+				
+				getDescriptionLabel().setVisible(false);
+				getDescriptionTextArea().setVisible(false);
+				getNazwaLabel().setVisible(false);
 				getNameTextBox().setVisible(false);
-				getDescriptionRichTextArea().setVisible(false);
 				break;
 			case EDIT:
 				getGalleryDropDownList().setVisible(false);
@@ -223,8 +225,11 @@ public class ImageForm extends Composite {
 				getContextPanel().setVisible(true);
 				getImageUpload().setVisible(true);
 				getPublicatedCheckBox().setVisible(true);
+
+				getNazwaLabel().setVisible(true);
 				getNameTextBox().setVisible(true);
-				getDescriptionRichTextArea().setVisible(true);
+				getDescriptionLabel().setVisible(true);
+				getDescriptionTextArea().setVisible(true);
 				break;
 			case EDIT_MULTI:
 				getGalleryDropDownList().setVisible(false);;
@@ -234,8 +239,11 @@ public class ImageForm extends Composite {
 				getContextPanel().setVisible(true);
 				getImageUpload().setVisible(false);
 				getPublicatedCheckBox().setVisible(true);
+
+				getDescriptionLabel().setVisible(false);
+				getDescriptionTextArea().setVisible(false);
+				getNazwaLabel().setVisible(false);
 				getNameTextBox().setVisible(false);
-				getDescriptionRichTextArea().setVisible(false);
 				break;
 		}
 		this.mode = mode;
@@ -275,7 +283,13 @@ public class ImageForm extends Composite {
 	protected TextBox getNameTextBox() {
 		return nameTextBox;
 	}
-	protected RichTextArea getDescriptionRichTextArea() {
-		return descriptionRichTextArea;
+	protected TextArea getDescriptionTextArea() {
+		return descriptionTextArea;
+	}
+	protected Label getDescriptionLabel() {
+		return descriptionLabel;
+	}
+	protected Label getNazwaLabel() {
+		return nazwaLabel;
 	}
 }
