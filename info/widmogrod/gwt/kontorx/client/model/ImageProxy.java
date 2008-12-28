@@ -30,8 +30,12 @@ public class ImageProxy extends ProxyModel<ImageVO> {
 	// Notifications
 	public static final String BLOCK_ACTION_NEW = "ImageProxy_BLOCK_ACTION_NEW";
 	public static final String BLOCK_ACTION_CANCEL = "ImageProxy_BLOCK_ACTION_CANCEL";
-	public static final String BLOCK_ACTION_LOAD = "ImageProxy_BLOCK_ACTION_LOAD";
-	public static final String BLOCK_ACTION_LOAD_MULTI = "ImageProxy_BLOCK_ACTION_LOAD_MULTI";
+	public static final String BLOCK_ACTION_SHOW = "ImageProxy_BLOCK_ACTION_SHOW";
+//	public static final String BLOCK_ACTION_SHOW_NONE = "ImageProxy_BLOCK_ACTION_SHOW_NONE";
+	public static final String BLOCK_ACTION_SHOW_MULTI = "ImageProxy_BLOCK_ACTION_SHOW_MULTI";
+	public static final String BLOCK_ACTION_EDIT = "ImageProxy_BLOCK_ACTION_EDIT";
+	public static final String BLOCK_ACTION_EDIT_MULTI = "ImageProxy_BLOCK_ACTION_EDIT_MULTI";
+
 	public static final String IMAGE_ADDED = "ImageProxy_IMAGE_ADDED";
 	public static final String IMAGE_DELETED = "ImageProxy_IMAGE_DELETED";
 	public static final String IMAGE_DELETED_MULTI = "ImageProxy_IMAGE_DELETED_MULTI";
@@ -229,6 +233,7 @@ public class ImageProxy extends ProxyModel<ImageVO> {
 				// dzialanie off-line
 				updateModelRowset(idList, gallery);
 				sendNotification(IMAGE_UPDATED_GALLERY, rowset, null);
+//				sendNotification(GalleryProxy.BLOCK_ACTION_SELECT, gallery, null);
 
 				String message = "Grafiki zostały przypisane do galerii " + gallery.getName();
 				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.INFO);
@@ -252,6 +257,7 @@ public class ImageProxy extends ProxyModel<ImageVO> {
 		return result;
 	}
 	
+	
 	public void load(final AsyncCallback<Boolean> asyncCallback) {
 		clientModel.findAll(new AsyncCallback<ArrayList<ImageVO>>() {
 			public void onSuccess(ArrayList<ImageVO> result) {
@@ -260,10 +266,10 @@ public class ImageProxy extends ProxyModel<ImageVO> {
 			}
 
 			public void onFailure(Throwable caught) {
-				asyncCallback.onFailure(caught);
-
 				String message = caught.getMessage();
 				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.ERROR);
+				
+				asyncCallback.onFailure(caught);
 			}
 		});
 	}

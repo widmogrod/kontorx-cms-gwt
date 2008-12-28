@@ -27,6 +27,7 @@ public class GalleryProxy extends ProxyModel<GalleryVO> {
 	public static final String BLOCK_ACTION_NEW = "GalleryProxy_BLOCK_ACTION_NEW";
 	public static final String BLOCK_ACTION_CANCEL = "GalleryProxy_BLOCK_ACTION_CANCEL";
 	public static final String BLOCK_ACTION_SELECT = "GalleryProxy_BLOCK_ACTION_SELECT";
+	public static final String BLOCK_ACTION_SELECT_NONE = "GalleryProxy_BLOCK_ACTION_SELECT_NONE";
 	public static final String BLOCK_ACTION_SELECT_MULTI = "GalleryProxy_BLOCK_ACTION_SELECT_MULTI";
 	public static final String BLOCK_ACTION_EDIT = "GalleryProxy_BLOCK_ACTION_EDIT";
 	public static final String BLOCK_ACTION_EDIT_MULTI = "GalleryProxy_BLOCK_ACTION_EDIT_MULTI";
@@ -232,6 +233,7 @@ public class GalleryProxy extends ProxyModel<GalleryVO> {
 		return null;
 	}
 
+	
 	public void load(final AsyncCallback<Boolean> asyncCallback) {
 		clientModel.findAll(new AsyncCallback<ArrayList<GalleryVO>>() {
 			public void onSuccess(ArrayList<GalleryVO> result) {

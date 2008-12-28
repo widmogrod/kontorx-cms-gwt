@@ -21,6 +21,7 @@ public class MainWindow extends Composite {
 	public MainWindow() {
 		final AbsolutePanel absolutePanel = new AbsolutePanel();
 		initWidget(absolutePanel);
+		absolutePanel.setHeight("100%");
 		
 		messageSimplePanel = new SimplePanel();
 		absolutePanel.add(messageSimplePanel);

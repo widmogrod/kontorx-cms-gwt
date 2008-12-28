@@ -6,5 +6,6 @@ public class InitCommand extends MacroCommand {
 	public InitCommand() {
 		addSubCommand(new InitModelCommand());
 		addSubCommand(new InitViewCommand());
+		addSubCommand(new InitDataCommand());
 	}
 }

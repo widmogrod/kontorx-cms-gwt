@@ -15,14 +15,17 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RichTextArea;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class ImageForm extends Composite {
 	public enum Mode {
-		SHOW("Edytuj",null),
-		ADD("Dodaj","Usuń"),
-		UPDATE("Zapisz","Usuń"),
-		UPDATE_MULTI("Aktualizuj","Usuń zaznaczone");
+		SHOW("Edytuj","Usuń"),
+		SHOW_MULTI("Edytuj","Usuń grafiki"),
+		NEW("Dodaj","Usuń"),
+		EDIT("Zapisz","Usuń"),
+		EDIT_MULTI("Aktualizuj","Usuń zaznaczone");
 
 		private String name;
 		private String delete;
@@ -41,6 +44,9 @@ public class ImageForm extends Composite {
 		}
 	};
 
+	private RichTextArea descriptionRichTextArea;
+	private TextBox nameTextBox;
+	private VerticalPanel contextPanel;
 	private FormPanel formPanel;
 	
 	private FileUpload imageUpload;
@@ -66,13 +72,14 @@ public class ImageForm extends Composite {
 
 		final HorizontalPanel horizontalPanel = new HorizontalPanel();
 		verticalPanel.add(horizontalPanel);
+		verticalPanel.setCellWidth(horizontalPanel, "100%");
 		horizontalPanel.setWidth("100%");
 		horizontalPanel.setStyleName("kx-NavigationBar");
 
 		actionButton = new Button();
 		horizontalPanel.add(actionButton);
 		horizontalPanel.setCellHorizontalAlignment(actionButton, HasHorizontalAlignment.ALIGN_LEFT);
-		actionButton.setText(Mode.ADD.getName());
+		actionButton.setText(Mode.NEW.getName());
 
 		cancelButton = new Button();
 		horizontalPanel.add(cancelButton);
@@ -109,31 +116,43 @@ public class ImageForm extends Composite {
 		horizontalPanel.add(deleteButton);
 		horizontalPanel.setCellHorizontalAlignment(deleteButton, HasHorizontalAlignment.ALIGN_RIGHT);
 		horizontalPanel.setCellWidth(deleteButton, "100%");
-		deleteButton.setEnabled(false);
-		deleteButton.setText(Mode.ADD.getDeleteName());
+		deleteButton.setText(Mode.NEW.getDeleteName());
 
-		final VerticalPanel verticalPanel_1 = new VerticalPanel();
-		verticalPanel.add(verticalPanel_1);
-		verticalPanel.setCellVerticalAlignment(verticalPanel_1, HasVerticalAlignment.ALIGN_TOP);
+		contextPanel = new VerticalPanel();
+		verticalPanel.add(contextPanel);
+		verticalPanel.setCellVerticalAlignment(contextPanel, HasVerticalAlignment.ALIGN_TOP);
 
 		imageUpload = new FileUpload();
-		verticalPanel_1.add(imageUpload);
+		contextPanel.add(imageUpload);
 		imageUpload.setName("photoupload");
 
 		final HorizontalPanel horizontalPanel_1 = new HorizontalPanel();
-		verticalPanel_1.add(horizontalPanel_1);
+		contextPanel.add(horizontalPanel_1);
 
 //		DropDownList categoryDropDownList2 = new DropDownList("Kategoria 222");
 //		horizontalPanel.add(categoryDropDownList2);
 //		categoryDropDownList2.add(new CheckBoxListManager<Category>());
 
-		final Label label = new Label("Opublikować");
-		horizontalPanel_1.add(label);
-
 		publicatedCheckBox = new CheckBox();
 		horizontalPanel_1.add(publicatedCheckBox);
 		publicatedCheckBox.setName("publicated");
-		publicatedCheckBox.setText("Tak");
+		publicatedCheckBox.setText("Opublikuj grafikę");
+
+		final Label nazwaLabel = new Label("Nazwa");
+		verticalPanel.add(nazwaLabel);
+
+		nameTextBox = new TextBox();
+		verticalPanel.add(nameTextBox);
+		nameTextBox.setText("");
+
+		final Label opisGrafikiLabel = new Label("Opis grafiki");
+		verticalPanel.add(opisGrafikiLabel);
+
+		descriptionRichTextArea = new RichTextArea();
+		verticalPanel.add(descriptionRichTextArea);
+		descriptionRichTextArea.setWidth("100%");
+		verticalPanel.setCellWidth(descriptionRichTextArea, "100%");
+		descriptionRichTextArea.setText("");
 	}
 
 	private ImageVO model;
@@ -146,44 +165,77 @@ public class ImageForm extends Composite {
 	public void setModel(ImageVO model) {
 		this.model = model;
 		getPublicatedCheckBox().setChecked(model.getPublicated());
+		getNameTextBox().setText(model.getName());
+		getDescriptionRichTextArea().setHTML(model.getDescription());
 	}
 
 	public ImageVO getModel() {
 		model.setPublicated(getPublicatedCheckBox().isChecked());
+		model.setName(getNameTextBox().getName());
+		model.setDescription(getDescriptionRichTextArea().getHTML());
 		return model;
 	}
 	
-	public ImageVO getNewModel() {
-		ImageVO model = ImageVO.get();
-		model.setPublicated(getPublicatedCheckBox().isChecked());
-		return model;
-	}
+//	public ImageVO getNewModel() {
+//		// TODO Czy jest brany ??
+//		ImageVO model = ImageVO.get();
+//		model.setPublicated(getPublicatedCheckBox().isChecked());
+//		model.setName(getNameTextBox().getName());
+//		model.setDescription(getDescriptionRichTextArea().getHTML());
+//		return model;
+//	}
 	
-	private Mode mode = Mode.ADD;
+	private Mode mode = Mode.NEW;
 	
 	public void setMode(Mode mode) {
 		switch (mode) {
 			default:
-			case ADD:
+			case SHOW:
+				getGalleryDropDownList().setVisible(true);
+				getActionButton().setText(Mode.SHOW.getName());
+				getDeleteButton().setText(Mode.SHOW.getDeleteName());
+				getDeleteButton().setVisible(true);
+				getContextPanel().setVisible(false);
+				break;
+			case SHOW_MULTI:
+				getGalleryDropDownList().setVisible(true);
+				getActionButton().setText(Mode.SHOW_MULTI.getName());
+				getDeleteButton().setText(Mode.SHOW_MULTI.getDeleteName());
+				getDeleteButton().setVisible(true);
+				getContextPanel().setVisible(false);
+				break;
+			case NEW:
 				getGalleryDropDownList().setVisible(false);
-				getActionButton().setText(Mode.ADD.getName());
-				getDeleteButton().setText(Mode.ADD.getDeleteName());
-				getDeleteButton().setEnabled(false);
+				getActionButton().setText(Mode.NEW.getName());
+				getDeleteButton().setText(Mode.NEW.getDeleteName());
+				getDeleteButton().setVisible(false);
+				getContextPanel().setVisible(true);
 				getImageUpload().setVisible(true);
+				getPublicatedCheckBox().setVisible(false);
+				getNameTextBox().setVisible(false);
+				getDescriptionRichTextArea().setVisible(false);
 				break;
-			case UPDATE:
-				getGalleryDropDownList().setVisible(true);
-				getActionButton().setText(Mode.UPDATE.getName());
-				getDeleteButton().setText(Mode.UPDATE.getDeleteName());
-				getDeleteButton().setEnabled(true);
+			case EDIT:
+				getGalleryDropDownList().setVisible(false);
+				getActionButton().setText(Mode.EDIT.getName());
+				getDeleteButton().setText(Mode.EDIT.getDeleteName());
+				getDeleteButton().setVisible(false);
+				getContextPanel().setVisible(true);
 				getImageUpload().setVisible(true);
+				getPublicatedCheckBox().setVisible(true);
+				getNameTextBox().setVisible(true);
+				getDescriptionRichTextArea().setVisible(true);
 				break;
-			case UPDATE_MULTI:
-				getGalleryDropDownList().setVisible(true);
-				getActionButton().setHTML(Mode.UPDATE_MULTI.getName());
-				getDeleteButton().setText(Mode.UPDATE_MULTI.getDeleteName());
-				getDeleteButton().setEnabled(true);
+			case EDIT_MULTI:
+				getGalleryDropDownList().setVisible(false);;
+				getActionButton().setHTML(Mode.EDIT_MULTI.getName());
+				getDeleteButton().setText(Mode.EDIT_MULTI.getDeleteName());
+				getDeleteButton().setVisible(false);
+				getContextPanel().setVisible(true);
 				getImageUpload().setVisible(false);
+				getPublicatedCheckBox().setVisible(true);
+				getNameTextBox().setVisible(false);
+				getDescriptionRichTextArea().setVisible(false);
 				break;
 		}
 		this.mode = mode;
@@ -216,5 +268,14 @@ public class ImageForm extends Composite {
 	}
 	public FormPanel getFormPanel() {
 		return formPanel;
+	}
+	protected VerticalPanel getContextPanel() {
+		return contextPanel;
+	}
+	protected TextBox getNameTextBox() {
+		return nameTextBox;
+	}
+	protected RichTextArea getDescriptionRichTextArea() {
+		return descriptionRichTextArea;
 	}
 }

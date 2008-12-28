@@ -23,6 +23,11 @@
 }
 
 .kx-ImageList {float: left; width: 15%;  height: 70px;}
+.kx-HTML-info {
+	font-size:.7em;
+	font-style:italic;
+	color: #555;
+}
 
 /*
 .gwt-Button {}

@@ -32,15 +32,17 @@ public class MainWindowMediator extends Mediator {
 		return new String[] {
 				// Gallery
 				GalleryProxy.BLOCK_ACTION_SELECT,
+				GalleryProxy.BLOCK_ACTION_SELECT_NONE,
 				GalleryProxy.BLOCK_ACTION_NEW,
 				GalleryProxy.BLOCK_ACTION_CANCEL,
 				// Category
 				CategoryProxy.BLOCK_ACTION_EDIT,
 				CategoryProxy.BLOCK_ACTION_NEW,
 				CategoryProxy.BLOCK_ACTION_SELECT,
+				CategoryProxy.BLOCK_ACTION_SELECT_NONE,
 				CategoryProxy.BLOCK_ACTION_CANCEL,
 				// Image
-				ImageProxy.BLOCK_ACTION_LOAD,
+				ImageProxy.BLOCK_ACTION_SHOW,
 				ImageProxy.BLOCK_ACTION_NEW,
 				ImageProxy.BLOCK_ACTION_CANCEL};
 	}
@@ -59,7 +61,8 @@ public class MainWindowMediator extends Mediator {
 			GalleryFormMediator mediator = (GalleryFormMediator) facade.retrieveMediator(GalleryFormMediator.NAME);
 			getViewComponent().setInfoPanel(mediator.getViewComponent());
 		} else
-		if (name == GalleryProxy.BLOCK_ACTION_CANCEL) {
+		if (name == GalleryProxy.BLOCK_ACTION_CANCEL
+				|| name == GalleryProxy.BLOCK_ACTION_SELECT_NONE) {
 			getViewComponent().setInfoPanel(new Label("Informacje gal"));
 		} else
 		if (name == CategoryProxy.BLOCK_ACTION_EDIT) {
@@ -71,10 +74,11 @@ public class MainWindowMediator extends Mediator {
 			CategoryFormMediator mediator = (CategoryFormMediator) facade.retrieveMediator(CategoryFormMediator.NAME);
 			getViewComponent().setInfoPanel(mediator.getViewComponent());
 		} else
-		if (name == CategoryProxy.BLOCK_ACTION_CANCEL) {
+		if (name == CategoryProxy.BLOCK_ACTION_CANCEL
+				|| name == CategoryProxy.BLOCK_ACTION_SELECT_NONE) {
 			getViewComponent().setInfoPanel(new Label("Informacje kat"));
 		} else
-		if (name == ImageProxy.BLOCK_ACTION_LOAD) {
+		if (name == ImageProxy.BLOCK_ACTION_SHOW) {
 			ImageFormMediator mediator = (ImageFormMediator) facade.retrieveMediator(ImageFormMediator.NAME);
 			getViewComponent().setInfoPanel(mediator.getViewComponent());
 		} else

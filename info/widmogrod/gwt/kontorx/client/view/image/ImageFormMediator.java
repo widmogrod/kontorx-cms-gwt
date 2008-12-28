@@ -19,7 +19,7 @@ import org.puremvc.java.multicore.interfaces.INotification;
 import org.puremvc.java.multicore.patterns.facade.Facade;
 import org.puremvc.java.multicore.patterns.mediator.Mediator;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FormHandler;
 import com.google.gwt.user.client.ui.FormSubmitCompleteEvent;
@@ -49,13 +49,19 @@ public class ImageFormMediator extends Mediator {
 			public void onClick(Widget sender) {
 				switch (view.getMode()) {
 					default:
-					case ADD:
+					case SHOW:
+						sendNotification(ImageProxy.BLOCK_ACTION_EDIT, view.getModel(), null);
+						break;
+					case SHOW_MULTI:
+						sendNotification(ImageProxy.BLOCK_ACTION_EDIT_MULTI, null, null);
+						break;
+					case NEW:
 						view.getFormPanel().submit();
 						break;
-					case UPDATE:
+					case EDIT:
 						proxy.edit(view.getModel());
 						break;
-					case UPDATE_MULTI:
+					case EDIT_MULTI:
 						ImageBlockMediator mediator = (ImageBlockMediator) Facade.getInstance(ApplicationFacade.INIT).retrieveMediator(ImageBlockMediator.NAME);
 						ArrayList<ImageVO> models = mediator.getViewComponent().getListManager().getCheckedModels();
 						proxy.edit(models, view.getModel());
@@ -67,17 +73,19 @@ public class ImageFormMediator extends Mediator {
 
 		view.getDeleteButton().addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
-				switch (view.getMode()) {
-					case UPDATE:
+				if (Window.confirm("Czy chczesz usunąć grafikę?")) {
+					switch (view.getMode()) {
+					case SHOW:
 						proxy.delete(view.getModel());
 						break;
-					case UPDATE_MULTI:
+					case SHOW_MULTI:
 						ImageBlockMediator mediator = (ImageBlockMediator) Facade.getInstance(ApplicationFacade.INIT).retrieveMediator(ImageBlockMediator.NAME);
 						ArrayList<ImageVO> models = mediator.getViewComponent().getListManager().getCheckedModels();
 						proxy.delete(models);
 						break;
+					
+					}
 				}
-				
 			}
 		});
 		
@@ -114,17 +122,17 @@ public class ImageFormMediator extends Mediator {
 			}
 		});
 		
-		GalleryProxy proxyGallery = getGalleryProxy();
-		manager.setModel(proxyGallery);
-		proxy.load(new AsyncCallback<Boolean>(){
-			public void onSuccess(Boolean result) {
-				manager.render();
-			}
-			public void onFailure(Throwable caught) {
-				String message = caught.getMessage();
-				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.ERROR);
-			}
-		});
+//		GalleryProxy proxyGallery = getGalleryProxy();
+//		manager.setModel(proxyGallery);
+//		proxy.load(new AsyncCallback<Boolean>(){
+//			public void onSuccess(Boolean result) {
+//				manager.render();
+//			}
+//			public void onFailure(Throwable caught) {
+//				String message = caught.getMessage();
+//				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.ERROR);
+//			}
+//		});
 	}
 
 	private ImageProxy imageProxy;
@@ -157,13 +165,15 @@ public class ImageFormMediator extends Mediator {
 		return new String[] {
 				// Image
 				ImageProxy.IMAGE_ADDED,
-				ImageProxy.IMAGE_DELETED,
+//				ImageProxy.IMAGE_DELETED,
 				ImageProxy.IMAGE_UPDATED,
 				ImageProxy.IMAGE_UPDATED_MULTI,
-				ImageProxy.IMAGE_UPDATED_GALLERY,
+//				ImageProxy.IMAGE_UPDATED_GALLERY,
 				ImageProxy.BLOCK_ACTION_NEW,
-				ImageProxy.BLOCK_ACTION_LOAD,
-				ImageProxy.BLOCK_ACTION_LOAD_MULTI,
+				ImageProxy.BLOCK_ACTION_SHOW,
+				ImageProxy.BLOCK_ACTION_SHOW_MULTI,
+				ImageProxy.BLOCK_ACTION_EDIT,
+				ImageProxy.BLOCK_ACTION_EDIT_MULTI,
 				// Category
 				GalleryProxy.GALLERY_ADDED,
 				GalleryProxy.GALLERY_UPDATED,
@@ -172,18 +182,21 @@ public class ImageFormMediator extends Mediator {
 				GalleryProxy.GALLERY_DELETED_MULTI};
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public void handleNotification(INotification notification) {
 		String name = notification.getName();
 		
 		ImageForm view = getViewComponent();
 		
-		if (name == ImageProxy.BLOCK_ACTION_LOAD
+		if (name == ImageProxy.BLOCK_ACTION_NEW) {
+			view.setMode(Mode.NEW);
+			view.cleanModel();
+		} else
+		if (name == ImageProxy.BLOCK_ACTION_SHOW
 				|| name == ImageProxy.IMAGE_UPDATED
 				|| name == ImageProxy.IMAGE_ADDED) {
 			ImageVO image = (ImageVO) notification.getBody();
-			view.setMode(Mode.UPDATE);
+			view.setMode(Mode.SHOW);
 			view.setModel(image);
 
 			CheckBoxListManager<GalleryVO> manager = view.getGalleryCheckBoxListManager();
@@ -197,36 +210,32 @@ public class ImageFormMediator extends Mediator {
 				manager.setChecked(false);
 			}
 		} else
-		if (name == ImageProxy.IMAGE_UPDATED_MULTI) {
-			view.setMode(Mode.UPDATE_MULTI);
+		if (name == ImageProxy.BLOCK_ACTION_SHOW_MULTI
+				|| name == ImageProxy.IMAGE_UPDATED_MULTI) {
+			view.setMode(Mode.SHOW_MULTI);
+			view.cleanModel();
+		} else
+//		if (name == ImageProxy.IMAGE_UPDATED_GALLERY) {
+//			ArrayList<ImageVO> rowset = (ArrayList<ImageVO>) notification.getBody();
+//			ImageVO image = rowset.get(0);
+//
+//			CheckBoxListManager<GalleryVO> manager = view.getGalleryCheckBoxListManager();
+//
+//			GalleryProxy proxy = getGalleryProxy();
+//			GalleryVO row = proxy.findBy(image);
+//
+//			if (row != null) {
+//				manager.setCheckedByModelRow(row);
+//			} else {
+//				manager.setChecked(false);
+//			}
+//		} else
+		if (name == ImageProxy.BLOCK_ACTION_EDIT) {
+			view.setMode(Mode.EDIT);
 			view.setModel((ImageVO) notification.getBody());
 		} else
-		if (name == ImageProxy.IMAGE_UPDATED_GALLERY) {
-			ArrayList<ImageVO> rowset = (ArrayList<ImageVO>) notification.getBody();
-			ImageVO image = rowset.get(0);
-
-			CheckBoxListManager<GalleryVO> manager = view.getGalleryCheckBoxListManager();
-
-			GalleryProxy proxy = getGalleryProxy();
-			GalleryVO row = proxy.findBy(image);
-
-			if (row != null) {
-				manager.setCheckedByModelRow(row);
-			} else {
-				manager.setChecked(false);
-			}
-		} else
-		if (name == ImageProxy.IMAGE_DELETED) {
-			view.setMode(Mode.ADD);
-			view.cleanModel();
-		} else
-		if (name == ImageProxy.BLOCK_ACTION_NEW
-				|| name == ImageProxy.IMAGE_DELETED_MULTI) {
-			view.setMode(Mode.ADD);
-			view.cleanModel();
-		} else
-		if (name == ImageProxy.BLOCK_ACTION_LOAD_MULTI) {
-			view.setMode(Mode.UPDATE_MULTI);
+		if (name == ImageProxy.BLOCK_ACTION_EDIT_MULTI) {
+			view.setMode(Mode.EDIT_MULTI);
 			view.cleanModel();
 		} else
 		if (name == GalleryProxy.GALLERY_ADDED
@@ -236,7 +245,6 @@ public class ImageFormMediator extends Mediator {
 				|| name == GalleryProxy.GALLERY_DELETED_MULTI) {
 
 			CheckBoxListManager<GalleryVO> manager = view.getGalleryCheckBoxListManager();
-//			manager.setModel(getImageProxy().getModel());
 			manager.refresh();
 		}
 	}

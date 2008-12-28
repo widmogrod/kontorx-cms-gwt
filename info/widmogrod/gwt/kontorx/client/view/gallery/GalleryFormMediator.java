@@ -5,10 +5,8 @@ import info.widmogrod.gwt.kontorx.client.model.CategoryProxy;
 import info.widmogrod.gwt.kontorx.client.model.GalleryProxy;
 import info.widmogrod.gwt.kontorx.client.model.vo.CategoryVO;
 import info.widmogrod.gwt.kontorx.client.model.vo.GalleryVO;
-import info.widmogrod.gwt.kontorx.client.view.InfoBoxMediator;
 import info.widmogrod.gwt.kontorx.client.view.gallery.components.GalleryForm;
 import info.widmogrod.gwt.kontorx.client.view.gallery.components.GalleryForm.Mode;
-import info.widmogrod.gwt.library.client.ui.MessageBox;
 import info.widmogrod.gwt.library.client.ui.interfaces.RenderCallback;
 import info.widmogrod.gwt.library.client.ui.list.CheckBoxList;
 import info.widmogrod.gwt.library.client.ui.list.CheckBoxListManager;
@@ -20,7 +18,6 @@ import org.puremvc.java.multicore.patterns.facade.Facade;
 import org.puremvc.java.multicore.patterns.mediator.Mediator;
 
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -109,17 +106,17 @@ public class GalleryFormMediator extends Mediator {
 			}
 		});
 		
-		CategoryProxy proxyCategory = getCategoryProxy();
-		manager.setModel(proxyCategory);
-		proxy.load(new AsyncCallback<Boolean>(){
-			public void onSuccess(Boolean result) {
-				manager.render();
-			}
-			public void onFailure(Throwable caught) {
-				String message = caught.getMessage();
-				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.ERROR);
-			}
-		});
+//		CategoryProxy proxyCategory = getCategoryProxy();
+//		manager.setModel(proxyCategory);
+//		proxy.load(new AsyncCallback<Boolean>(){
+//			public void onSuccess(Boolean result) {
+//				manager.render();
+//			}
+//			public void onFailure(Throwable caught) {
+//				String message = caught.getMessage();
+//				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.ERROR);
+//			}
+//		});
 	}
 
 	private GalleryProxy galleryProxy;

@@ -1,4 +1,4 @@
-.kx-MessageBox {position: absolute; top: 0; left: 40%;}
+.kx-MessageBox {position: absolute; top: 0; left: 40%;z-index: 9999;}
 
 .kx-MessageBox .kx-MessageBox-info,
 .kx-MessageBox .kx-MessageBox-error {padding: 5px; margin-bottom: 1px; text-align: center;}

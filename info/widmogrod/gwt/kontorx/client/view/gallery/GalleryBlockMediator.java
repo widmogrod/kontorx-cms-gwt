@@ -3,19 +3,21 @@ package info.widmogrod.gwt.kontorx.client.view.gallery;
 import info.widmogrod.gwt.kontorx.client.ApplicationFacade;
 import info.widmogrod.gwt.kontorx.client.model.CategoryProxy;
 import info.widmogrod.gwt.kontorx.client.model.GalleryProxy;
+import info.widmogrod.gwt.kontorx.client.model.ImageProxy;
+import info.widmogrod.gwt.kontorx.client.model.vo.CategoryVO;
 import info.widmogrod.gwt.kontorx.client.model.vo.GalleryVO;
-import info.widmogrod.gwt.kontorx.client.view.InfoBoxMediator;
+import info.widmogrod.gwt.kontorx.client.model.vo.ImageVO;
 import info.widmogrod.gwt.kontorx.client.view.gallery.components.GalleryBlock;
-import info.widmogrod.gwt.library.client.ui.MessageBox;
 import info.widmogrod.gwt.library.client.ui.interfaces.RenderCallback;
 import info.widmogrod.gwt.library.client.ui.list.CheckBoxList;
 import info.widmogrod.gwt.library.client.ui.list.CheckBoxListManager;
+
+import java.util.ArrayList;
 
 import org.puremvc.java.multicore.interfaces.INotification;
 import org.puremvc.java.multicore.patterns.facade.Facade;
 import org.puremvc.java.multicore.patterns.mediator.Mediator;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -53,23 +55,23 @@ public class GalleryBlockMediator extends Mediator {
 						sendNotification(GalleryProxy.BLOCK_ACTION_SELECT, ch.getModel(), null);
 					} else {
 						// nie ma zadnych zaznaczonych, czyli usun widok formularza
-						sendNotification(GalleryProxy.BLOCK_ACTION_CANCEL, null, null);
+						sendNotification(GalleryProxy.BLOCK_ACTION_SELECT_NONE, null, null);
 					}
 				}
 			}
 		});
 		
-		GalleryProxy proxy = getGalleryProxy();
-		manager.setModel(proxy);
-		proxy.load(new AsyncCallback<Boolean>(){
-			public void onSuccess(Boolean result) {
-				manager.render();
-			}
-			public void onFailure(Throwable caught) {
-				String message = caught.getMessage();
-				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.ERROR);
-			}
-		});
+//		GalleryProxy proxy = getGalleryProxy();
+//		manager.setModel(proxy);
+//		proxy.load(new AsyncCallback<Boolean>(){
+//			public void onSuccess(Boolean result) {
+//				manager.render();
+//			}
+//			public void onFailure(Throwable caught) {
+//				String message = caught.getMessage();
+//				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.ERROR);
+//			}
+//		});
 	}
 
 	private GalleryProxy galleryProxy;
@@ -99,9 +101,14 @@ public class GalleryBlockMediator extends Mediator {
 				GalleryProxy.GALLERY_UPDATED_CATEGORY,
 				// Category
 				CategoryProxy.BLOCK_ACTION_SELECT,
-				CategoryProxy.BLOCK_ACTION_SELECT_MULTI};
+				CategoryProxy.BLOCK_ACTION_SELECT_NONE,
+				CategoryProxy.BLOCK_ACTION_SELECT_MULTI,
+				// Image
+				ImageProxy.IMAGE_UPDATED_GALLERY
+				};
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void handleNotification(INotification notification) {
 		String name = notification.getName();
@@ -114,6 +121,20 @@ public class GalleryBlockMediator extends Mediator {
 			GalleryVO row = (GalleryVO) notification.getBody();
 			manager.setCheckedByModelRow(row);
 		}
+		if (name == ImageProxy.IMAGE_UPDATED_GALLERY) {
+			// Prypisanie grafiki do galerii - powoduje zaznaczenie aktualnej galerii
+			ArrayList<ImageVO> rowset = (ArrayList<ImageVO>) notification.getBody();
+			ImageVO image = rowset.get(0);
+
+			GalleryProxy proxy = getGalleryProxy();
+			GalleryVO row = proxy.findBy(image);
+
+			if (row != null) {
+				manager.setCheckedByModelRow(row);
+			} else {
+				manager.setChecked(false);
+			}
+		}
 		if (name == GalleryProxy.GALLERY_UPDATED
 				|| name == GalleryProxy.GALLERY_UPDATED_MULTI
 				|| name == GalleryProxy.GALLERY_UPDATED_CATEGORY
@@ -121,8 +142,28 @@ public class GalleryBlockMediator extends Mediator {
 				|| name == GalleryProxy.GALLERY_DELETED_MULTI) {
 			manager.refresh();
 		} else
-		if (name == CategoryProxy.BLOCK_ACTION_SELECT
-				||name == CategoryProxy.BLOCK_ACTION_SELECT_MULTI) {
+		if (name == CategoryProxy.BLOCK_ACTION_SELECT) {
+			// pokaz tylko galerie, ktore nalerza do zaznaczonej kategorii
+			CategoryVO category = (CategoryVO) notification.getBody();
+			for (CheckBoxList<GalleryVO> ch : manager.getList().values()) {
+				if (ch.getModel().getCategoryId() == category.getId()) {
+					ch.setVisible(true);
+				} else {
+					ch.setVisible(false);
+				}
+			}
+		} else
+		if (name == CategoryProxy.BLOCK_ACTION_SELECT_NONE) {
+			// gdy nie ma zaznaczonej kategorii, pokaz wszystkie galerie
+			for (CheckBoxList<GalleryVO> ch : manager.getList().values()) {
+				ch.setVisible(true);
+			}
+		} else
+		if (name == CategoryProxy.BLOCK_ACTION_SELECT_MULTI) {
+			// gdy jest kilka zaznaczonych kategorii, pokaz wszystkie galerie
+			for (CheckBoxList<GalleryVO> ch : manager.getList().values()) {
+				ch.setVisible(true);
+			}
 			// odznaczamy zaznaczenia
 			manager.setChecked(false);
 		}

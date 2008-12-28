@@ -24,6 +24,7 @@ public class CategoryProxy extends ProxyModel<CategoryVO> {
 	// Notifications
 	public static final String BLOCK_ACTION_NEW = "CategoryProxy_BLOCK_ACTION_NEW";
 	public static final String BLOCK_ACTION_SELECT = "CategoryProxy_BLOCK_ACTION_SELECT";
+	public static final String BLOCK_ACTION_SELECT_NONE = "CategoryProxy_BLOCK_ACTION_SELECT_NONE";
 	public static final String BLOCK_ACTION_SELECT_MULTI = "CategoryProxy_BLOCK_ACTION_SELECT_MULTI";
 	public static final String BLOCK_ACTION_CANCEL = "CategoryProxy_BLOCK_ACTION_CANCEL";
 	public static final String BLOCK_ACTION_EDIT = "CategoryProxy_BLOCK_ACTION_EDIT";
@@ -191,6 +192,7 @@ public class CategoryProxy extends ProxyModel<CategoryVO> {
 		}
 		return null;
 	}
+
 	
 	public void load(final AsyncCallback<Boolean> asyncCallback) {
 		clientModel.findAll(new AsyncCallback<ArrayList<CategoryVO>>() {
