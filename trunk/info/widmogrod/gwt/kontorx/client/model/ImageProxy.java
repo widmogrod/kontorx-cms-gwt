@@ -3,6 +3,7 @@ package info.widmogrod.gwt.kontorx.client.model;
 import info.widmogrod.gwt.kontorx.client.model.vo.GalleryVO;
 import info.widmogrod.gwt.kontorx.client.model.vo.ImageVO;
 import info.widmogrod.gwt.kontorx.client.view.InfoBoxMediator;
+import info.widmogrod.gwt.library.client.db.xmlrpc.JsonDataRowset;
 import info.widmogrod.gwt.library.client.db.xmlrpc.XmlRpcDbTableDecorator;
 import info.widmogrod.gwt.library.client.puremvc.patterns.ProxyModel;
 import info.widmogrod.gwt.library.client.ui.MessageBox;
@@ -25,6 +26,8 @@ public class ImageProxy extends ProxyModel<ImageVO> {
 	// XmlRpc settings
 	public static final String XMLRPC_URL = GWT.getHostPageBaseURL() + "gwt/rpc";
 	public static final String XMLRPC_PROXY = "image";
+	public static final String JSON_DATA_URL = GWT.getHostPageBaseURL() + "image/list/format/gwtjson";
+	
 	public static final String FORM_ADD_URL = GWT.getHostPageBaseURL() + "image/upload/format/gwtjson";
 
 	// Notifications
@@ -44,10 +47,12 @@ public class ImageProxy extends ProxyModel<ImageVO> {
 	public static final String IMAGE_UPDATED_GALLERY = "ImageProxy_IMAGE_UPDATED_GALLERY";
 
 	private XmlRpcDbTableDecorator<ImageVO> clientModel;
+	private JsonDataRowset<ImageVO> jsonDataRowset;
 
 	public ImageProxy() {
 		super(NAME);
 		clientModel = new XmlRpcDbTableDecorator<ImageVO>(XMLRPC_URL, XMLRPC_PROXY);
+		jsonDataRowset = new JsonDataRowset<ImageVO>(JSON_DATA_URL);
 	}
 
 	protected void addModelRow(ImageVO row) {
@@ -259,7 +264,7 @@ public class ImageProxy extends ProxyModel<ImageVO> {
 	
 	
 	public void load(final AsyncCallback<Boolean> asyncCallback) {
-		clientModel.findAll(new AsyncCallback<ArrayList<ImageVO>>() {
+		jsonDataRowset.findAll(new AsyncCallback<ArrayList<ImageVO>>() {
 			public void onSuccess(ArrayList<ImageVO> result) {
 				setModel(result);
 				asyncCallback.onSuccess(true);
