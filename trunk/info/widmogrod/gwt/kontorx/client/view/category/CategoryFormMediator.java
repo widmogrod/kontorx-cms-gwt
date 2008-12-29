@@ -135,13 +135,5 @@ public class CategoryFormMediator extends Mediator {
 			view.setMode(Mode.EDIT_MULTI);
 			view.cleanModel();
 		}
-//		if (name == CategoryProxy.CATEGORY_DELETED_MULTI) {
-//			view.setMode(Mode.UPDATE_MULTI);
-//			view.setModel((CategoryVO) notification.getBody());
-//		} else
-//		if (name == CategoryProxy.CATEGORY_DELETED) {
-//			view.setMode(Mode.ADD);
-//			view.cleanModel();
-//		} else
 	}
 }

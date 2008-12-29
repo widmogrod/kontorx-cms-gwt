@@ -121,18 +121,6 @@ public class ImageFormMediator extends Mediator {
 				}
 			}
 		});
-		
-//		GalleryProxy proxyGallery = getGalleryProxy();
-//		manager.setModel(proxyGallery);
-//		proxy.load(new AsyncCallback<Boolean>(){
-//			public void onSuccess(Boolean result) {
-//				manager.render();
-//			}
-//			public void onFailure(Throwable caught) {
-//				String message = caught.getMessage();
-//				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.ERROR);
-//			}
-//		});
 	}
 
 	private ImageProxy imageProxy;

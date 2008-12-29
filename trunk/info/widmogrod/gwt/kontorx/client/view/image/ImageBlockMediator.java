@@ -45,60 +45,42 @@ public class ImageBlockMediator extends Mediator {
 
 				if (ImageBlock.Actions.SELECT_ALL.getValue() == value) {
 					manager.setCheckedVisible(true);
+					sendNotification(ImageProxy.BLOCK_ACTION_SHOW_MULTI, null, null);
 				} else
 				if (ImageBlock.Actions.SELECT_NONE.getValue() == value) {
 					manager.setCheckedVisible(false);
+					sendNotification(ImageProxy.BLOCK_ACTION_CANCEL, null, null);
 				} else
 				if (ImageBlock.Actions.SELECT_FLIP.getValue() == value) {
 					manager.setCheckedFlipVisible();
-				}
+					if (manager.getCountChecked() > 0) {
+						sendNotification(ImageProxy.BLOCK_ACTION_SHOW_MULTI, null, null);
+					} else {
+						sendNotification(ImageProxy.BLOCK_ACTION_CANCEL, null, null);
+					}
+				}				
 			}
 		});
 		
 		manager.setClickListner(new ClickListener(){
-			@SuppressWarnings("unchecked")
 			public void onClick(Widget sender) {
-				if (manager.getCountChecked() > 1) {
+				int count = manager.getCountChecked();
+
+				if (count > 1) {
 					// powiadamia ze jest zaznaczonych kilka ..
 					sendNotification(ImageProxy.BLOCK_ACTION_SHOW_MULTI, null, null);
+				} else
+				if (count == 1) {
+					ImageList<ImageVO> ich = manager.getCheckedCheckBox().get(0);
+					// zaznaczona jest jedna galeria
+					sendNotification(ImageProxy.BLOCK_ACTION_SHOW, ich.getModel(), null);
 				} else {
-					ImageList<ImageVO> ich = (ImageList<ImageVO>) sender;
-					if (ich.isChecked()) {
-						// zaznaczona jest jedna galeria
-						sendNotification(ImageProxy.BLOCK_ACTION_SHOW, ich.getModel(), null);
-					} else {
-						// nie ma zadnych zaznaczonych, czyli usun widok formularza
-						sendNotification(ImageProxy.BLOCK_ACTION_CANCEL, null, null);
-					}
+					// nie ma zadnych zaznaczonych, czyli usun widok formularza
+					sendNotification(ImageProxy.BLOCK_ACTION_CANCEL, null, null);
 				}
 			}
 		});
-		
-//		ImageProxy proxy = getImageProxy();
-//		manager.setModel(proxy);
-//		proxy.load(new AsyncCallback<Boolean>() {
-//			public void onSuccess(Boolean result) {
-//				manager.render();
-//				// Brak zaznaczonych galerii - ten komunikat powoduje wyświetlenie
-//				// grafik nie przypisanych do żadnej z galerii!
-//				sendNotification(GalleryProxy.BLOCK_ACTION_SELECT_NONE, null, null);
-//			}
-//			public void onFailure(Throwable caught) {
-//				String message = caught.getMessage();
-//				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.ERROR);
-//			}
-//		});
 	}
-	
-//	private ImageProxy imageProxy;
-//	
-//	private ImageProxy getImageProxy() {
-//		if (null == imageProxy) {
-//			// TODO bardzo dziwne nie dziala getFacade() ..
-//			imageProxy = (ImageProxy) Facade.getInstance(ApplicationFacade.INIT).retrieveProxy(ImageProxy.NAME);
-//		}
-//		return imageProxy;
-//	}
 	
 	private GalleryProxy galleryProxy;
 	

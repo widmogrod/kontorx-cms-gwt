@@ -11,9 +11,11 @@ import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
@@ -43,7 +45,13 @@ public class ImageForm extends Composite {
 			return delete;
 		}
 	};
+	
+	public static final String IMAGE_URL_THUMB_100x100 = "upload/gallery/thumb1/";
 
+	private Image imageShow;
+	private HTML descriptionShowHTML;
+	private Label nameShowLabel;
+	private VerticalPanel showPanel;
 	private Label nazwaLabel;
 	private Label descriptionLabel;
 	private TextArea descriptionTextArea;
@@ -99,19 +107,6 @@ public class ImageForm extends Composite {
 				return o1.getId() == o2.getId();
 			}
 		};
-//		{
-//			@Override
-//			public void setCheckedByModelRow(ImageVO model) {
-//				// porownywanie obiektow musi byc po ID by wszystko dzialalo!
-//				for (CheckBoxList<ImageVO> ch : list.values()) {
-//					if (ch.getModel().getId() == model.getId()) {
-//						ch.setChecked(true);
-//					} else {
-//						ch.setChecked(false);
-//					}
-//				}
-//			}
-//		};
 		galleryDropDownList.add(categoryBoxListManager);
 
 		deleteButton = new Button();
@@ -127,10 +122,6 @@ public class ImageForm extends Composite {
 		imageUpload = new FileUpload();
 		contextPanel.add(imageUpload);
 		imageUpload.setName("photoupload");
-
-//		DropDownList categoryDropDownList2 = new DropDownList("Kategoria 222");
-//		horizontalPanel.add(categoryDropDownList2);
-//		categoryDropDownList2.add(new CheckBoxListManager<Category>());
 
 		publicatedCheckBox = new CheckBox();
 		contextPanel.add(publicatedCheckBox);
@@ -151,6 +142,38 @@ public class ImageForm extends Composite {
 		contextPanel.add(descriptionTextArea);
 		descriptionTextArea.setSize("100%", "150px");
 		descriptionTextArea.setText("");
+
+		showPanel = new VerticalPanel();
+		verticalPanel.add(showPanel);
+		showPanel.setWidth("100%");
+		verticalPanel.setCellWidth(showPanel, "100%");
+
+		final HorizontalPanel horizontalPanel_1 = new HorizontalPanel();
+		showPanel.add(horizontalPanel_1);
+		horizontalPanel_1.setWidth("100%");
+		showPanel.setCellWidth(horizontalPanel_1, "100%");
+
+		final VerticalPanel verticalPanel_1 = new VerticalPanel();
+		horizontalPanel_1.add(verticalPanel_1);
+		horizontalPanel_1.setCellHorizontalAlignment(verticalPanel_1, HasHorizontalAlignment.ALIGN_LEFT);
+		horizontalPanel_1.setCellVerticalAlignment(verticalPanel_1, HasVerticalAlignment.ALIGN_TOP);
+		horizontalPanel_1.setCellWidth(verticalPanel_1, "100%");
+
+		nameShowLabel = new Label("nameShowLabel");
+		verticalPanel_1.add(nameShowLabel);
+
+		descriptionShowHTML = new HTML("New <i>HTML</i> panel");
+		verticalPanel_1.add(descriptionShowHTML);
+		descriptionShowHTML.setWidth("100%");
+		descriptionShowHTML.setText("descriptionShowHTML");
+
+		imageShow = new Image();
+		horizontalPanel_1.add(imageShow);
+		imageShow.setStyleName("gwt-Image.right");
+		horizontalPanel_1.setCellVerticalAlignment(imageShow, HasVerticalAlignment.ALIGN_TOP);
+		horizontalPanel_1.setCellHorizontalAlignment(imageShow, HasHorizontalAlignment.ALIGN_RIGHT);
+		horizontalPanel_1.setCellHeight(imageShow, "100%");
+		horizontalPanel_1.setCellWidth(imageShow, "100px");
 	}
 
 	private ImageVO model;
@@ -165,6 +188,10 @@ public class ImageForm extends Composite {
 		getPublicatedCheckBox().setChecked(model.getPublicated());
 		getNameTextBox().setText(model.getName());
 		getDescriptionTextArea().setText(model.getDescription());
+		
+		getNameShowLabel().setText(model.getName());
+		getDescriptionShowHTML().setHTML(model.getDescription());
+		getImageShow().setUrl(IMAGE_URL_THUMB_100x100 + model.getImage());
 	}
 
 	public ImageVO getModel() {
@@ -173,15 +200,6 @@ public class ImageForm extends Composite {
 		model.setDescription(getDescriptionTextArea().getText());
 		return model;
 	}
-	
-//	public ImageVO getNewModel() {
-//		// TODO Czy jest brany ??
-//		ImageVO model = ImageVO.get();
-//		model.setPublicated(getPublicatedCheckBox().isChecked());
-//		model.setName(getNameTextBox().getName());
-//		model.setDescription(getDescriptionRichTextArea().getHTML());
-//		return model;
-//	}
 	
 	private Mode mode = Mode.NEW;
 	
@@ -195,6 +213,7 @@ public class ImageForm extends Composite {
 				getDeleteButton().setVisible(true);
 				getContextPanel().setVisible(false);
 				getNazwaLabel().setVisible(false);
+				getShowPanel().setVisible(true);
 				break;
 			case SHOW_MULTI:
 				getGalleryDropDownList().setVisible(true);
@@ -202,6 +221,7 @@ public class ImageForm extends Composite {
 				getDeleteButton().setText(Mode.SHOW_MULTI.getDeleteName());
 				getDeleteButton().setVisible(true);
 				getContextPanel().setVisible(false);
+				getShowPanel().setVisible(false);
 				break;
 			case NEW:
 				getGalleryDropDownList().setVisible(false);
@@ -216,6 +236,8 @@ public class ImageForm extends Composite {
 				getDescriptionTextArea().setVisible(false);
 				getNazwaLabel().setVisible(false);
 				getNameTextBox().setVisible(false);
+				
+				getShowPanel().setVisible(false);
 				break;
 			case EDIT:
 				getGalleryDropDownList().setVisible(false);
@@ -230,6 +252,8 @@ public class ImageForm extends Composite {
 				getNameTextBox().setVisible(true);
 				getDescriptionLabel().setVisible(true);
 				getDescriptionTextArea().setVisible(true);
+				
+				getShowPanel().setVisible(false);
 				break;
 			case EDIT_MULTI:
 				getGalleryDropDownList().setVisible(false);;
@@ -244,6 +268,8 @@ public class ImageForm extends Composite {
 				getDescriptionTextArea().setVisible(false);
 				getNazwaLabel().setVisible(false);
 				getNameTextBox().setVisible(false);
+				
+				getShowPanel().setVisible(false);
 				break;
 		}
 		this.mode = mode;
@@ -291,5 +317,17 @@ public class ImageForm extends Composite {
 	}
 	protected Label getNazwaLabel() {
 		return nazwaLabel;
+	}
+	protected VerticalPanel getShowPanel() {
+		return showPanel;
+	}
+	protected Label getNameShowLabel() {
+		return nameShowLabel;
+	}
+	protected HTML getDescriptionShowHTML() {
+		return descriptionShowHTML;
+	}
+	protected Image getImageShow() {
+		return imageShow;
 	}
 }
