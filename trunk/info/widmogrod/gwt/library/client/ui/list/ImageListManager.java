@@ -141,10 +141,30 @@ public class ImageListManager<T extends JavaScriptObject> extends Composite {
 			ch.setChecked(checked);
 		}
 	}
+
+	public void setCheckedVisible(boolean checked) {
+		for (ImageList<T> ch : list.values()) {
+			if (ch.isVisible()) {
+				ch.setChecked(checked);
+			} else {
+				ch.setChecked(false);
+			}
+		}
+	}
 	
 	public void setCheckedFlip() {
 		for (ImageList<T> ch : list.values()) {
 			ch.setChecked(!ch.isChecked());
+		}
+	}
+	
+	public void setCheckedFlipVisible() {
+		for (ImageList<T> ch : list.values()) {
+			if (ch.isVisible()) {
+				ch.setChecked(!ch.isChecked());
+			} else {
+				ch.setChecked(false);
+			}
 		}
 	}
 	
