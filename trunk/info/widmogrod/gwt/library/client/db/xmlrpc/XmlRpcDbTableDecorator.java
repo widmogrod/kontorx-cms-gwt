@@ -31,11 +31,15 @@ public class XmlRpcDbTableDecorator<T extends JavaScriptObject> {
 
 			@SuppressWarnings("unchecked")
 			public void onSuccess(String response) {
+//				Gallery.log(proxy);
+//				Gallery.log(response);
+//				response = response.replace(",\n", ",");
+//				Gallery.log(response);
 				JSONValue v = JSONParser.parse(response);
 				JSONArray a = v.isArray();
 				
 				ArrayList<T> rowset = new ArrayList<T>();
-
+//				Gallery.log(a != null ? "true" : "false");
 				if (a != null) {
 					JsArray<T> jsArray = (JsArray<T>) a.getJavaScriptObject();
 					for (int i = 0; i < jsArray.length(); i++) {
