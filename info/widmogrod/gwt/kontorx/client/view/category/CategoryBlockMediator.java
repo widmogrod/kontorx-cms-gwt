@@ -37,47 +37,25 @@ public class CategoryBlockMediator extends Mediator {
 		});
 
 		manager.setClickListner(new ClickListener(){
-			@SuppressWarnings("unchecked")
 			public void onClick(Widget sender) {
-				if (manager.getCountChecked() > 1) {
+				int count = manager.getCountChecked();
+
+				if (count > 1) {
 					// powiadamia ze jest zaznaczonych kilka ..
 					sendNotification(CategoryProxy.BLOCK_ACTION_SELECT_MULTI, null, null);
+				} else
+				if (count == 1) {
+					CheckBoxList<CategoryVO> ch = manager.getCheckedCheckBox().get(0);
+					// zaznaczona jest jedna galeria
+					sendNotification(CategoryProxy.BLOCK_ACTION_SELECT, ch.getModel(), null);
 				} else {
-					CheckBoxList<CategoryVO> ch = (CheckBoxList<CategoryVO>) sender;
-					if (ch.isChecked()) {
-						// zaznaczona jest jedna galeria
-						sendNotification(CategoryProxy.BLOCK_ACTION_SELECT, ch.getModel(), null);
-					} else {
-						// nie ma zadnych zaznaczonych, czyli usun widok formularza
-						sendNotification(CategoryProxy.BLOCK_ACTION_SELECT_NONE, null, null);
-					}
+					// nie ma zadnych zaznaczonych, czyli usun widok formularza
+					sendNotification(CategoryProxy.BLOCK_ACTION_SELECT_NONE, null, null);
 				}
 			}
 		});
-		
-//		CategoryProxy proxy = getCategoryProxy();
-//		manager.setModel(proxy);
-//		proxy.load(new AsyncCallback<Boolean>() {
-//			public void onSuccess(Boolean result) {
-//				manager.render();
-//			}
-//			public void onFailure(Throwable caught) {
-//				String message = caught.getMessage();
-//				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.ERROR);
-//			}
-//		});
 	}
 
-//	private CategoryProxy categoryProxy;
-//	
-//	private CategoryProxy getCategoryProxy() {
-//		if (null == categoryProxy) {
-//			// TODO bardzo dziwne nie dziala getFacade() ..
-//			categoryProxy = (CategoryProxy) Facade.getInstance(ApplicationFacade.INIT).retrieveProxy(CategoryProxy.NAME);
-//		}
-//		return categoryProxy;
-//	}
-	
 	@Override
 	public CategoryBlock getViewComponent() {
 		return (CategoryBlock) super.getViewComponent();

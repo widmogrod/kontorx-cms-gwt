@@ -105,18 +105,6 @@ public class GalleryFormMediator extends Mediator {
 				}
 			}
 		});
-		
-//		CategoryProxy proxyCategory = getCategoryProxy();
-//		manager.setModel(proxyCategory);
-//		proxy.load(new AsyncCallback<Boolean>(){
-//			public void onSuccess(Boolean result) {
-//				manager.render();
-//			}
-//			public void onFailure(Throwable caught) {
-//				String message = caught.getMessage();
-//				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.ERROR);
-//			}
-//		});
 	}
 
 	private GalleryProxy galleryProxy;

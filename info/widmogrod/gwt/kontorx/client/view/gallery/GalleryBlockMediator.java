@@ -43,35 +43,23 @@ public class GalleryBlockMediator extends Mediator {
 		});
 
 		manager.setClickListner(new ClickListener(){
-			@SuppressWarnings("unchecked")
 			public void onClick(Widget sender) {
-				if (manager.getCountChecked() > 1) {
+				int count = manager.getCountChecked();
+
+				if (count > 1) {
 					// powiadamia ze jest zaznaczonych kilka ..
 					sendNotification(GalleryProxy.BLOCK_ACTION_SELECT_MULTI, null, null);
+				} else
+				if (count == 1) {
+					CheckBoxList<GalleryVO> ch = manager.getCheckedCheckBox().get(0);
+					// zaznaczona jest jedna galeria
+					sendNotification(GalleryProxy.BLOCK_ACTION_SELECT, ch.getModel(), null);
 				} else {
-					CheckBoxList<GalleryVO> ch = (CheckBoxList<GalleryVO>) sender;
-					if (ch.isChecked()) {
-						// zaznaczona jest jedna galeria
-						sendNotification(GalleryProxy.BLOCK_ACTION_SELECT, ch.getModel(), null);
-					} else {
-						// nie ma zadnych zaznaczonych, czyli usun widok formularza
-						sendNotification(GalleryProxy.BLOCK_ACTION_SELECT_NONE, null, null);
-					}
+					// nie ma zadnych zaznaczonych, czyli usun widok formularza
+					sendNotification(GalleryProxy.BLOCK_ACTION_SELECT_NONE, null, null);
 				}
 			}
 		});
-		
-//		GalleryProxy proxy = getGalleryProxy();
-//		manager.setModel(proxy);
-//		proxy.load(new AsyncCallback<Boolean>(){
-//			public void onSuccess(Boolean result) {
-//				manager.render();
-//			}
-//			public void onFailure(Throwable caught) {
-//				String message = caught.getMessage();
-//				sendNotification(InfoBoxMediator.DISPLAY_MESSAGE, message, MessageBox.ERROR);
-//			}
-//		});
 	}
 
 	private GalleryProxy galleryProxy;

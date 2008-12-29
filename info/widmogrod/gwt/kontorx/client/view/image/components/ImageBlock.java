@@ -40,6 +40,7 @@ public class ImageBlock extends Composite {
 	};
 	
 	private ListBox actionsBox;
+
 	public static final String IMAGE_URL_THUMB = "upload/gallery/thumb/";
 
 	private ImageListManager<ImageVO> list;

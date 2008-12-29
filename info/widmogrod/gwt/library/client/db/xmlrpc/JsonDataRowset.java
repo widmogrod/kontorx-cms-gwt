@@ -22,7 +22,7 @@ public class JsonDataRowset<T extends JavaScriptObject> {
 	}
 
 	public void findAll(final AsyncCallback<ArrayList<T>> callback) {
-		RequestBuilder r = new RequestBuilder(RequestBuilder.POST, url);
+		RequestBuilder r = new RequestBuilder(RequestBuilder.GET, url);
 		r.setCallback(new RequestCallback() {
 			@SuppressWarnings("unchecked")
 			public void onResponseReceived(Request request, Response response) {
