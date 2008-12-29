@@ -40,15 +40,17 @@ public class ImageBlockMediator extends Mediator {
 			public void onChange(Widget sender) {
 				ListBox list = (ListBox) sender;
 				String value = list.getValue(list.getSelectedIndex());
+				// resetuję do wyboru wartości
+				list.setSelectedIndex(0);
 
 				if (ImageBlock.Actions.SELECT_ALL.getValue() == value) {
-					manager.setChecked(true);
+					manager.setCheckedVisible(true);
 				} else
 				if (ImageBlock.Actions.SELECT_NONE.getValue() == value) {
-					manager.setChecked(false);
+					manager.setCheckedVisible(false);
 				} else
 				if (ImageBlock.Actions.SELECT_FLIP.getValue() == value) {
-					manager.setCheckedFlip();
+					manager.setCheckedFlipVisible();
 				}
 			}
 		});
@@ -153,17 +155,6 @@ public class ImageBlockMediator extends Mediator {
 				}
 			}
 		} else
-		if (name == GalleryProxy.BLOCK_ACTION_SELECT) {
-			// pokaz tylko grafiki, ktore nalerza do zaznaczonej galerii
-			GalleryVO gallery = (GalleryVO) notification.getBody();
-			for (ImageList<ImageVO> ich : manager.getList().values()) {
-				if (ich.getModel().getGalleryId() == gallery.getId()) {
-					ich.setVisible(true);
-				} else {
-					ich.setVisible(false);
-				}
-			}
-		} else
 		if (name == ImageProxy.IMAGE_UPDATED_GALLERY) {
 			// Prypisanie grafiki do galerii - powoduje zaznaczenie aktualnej galerii
 			ArrayList<ImageVO> rowset = (ArrayList<ImageVO>) notification.getBody();
@@ -180,7 +171,22 @@ public class ImageBlockMediator extends Mediator {
 				}
 			}
 		} else
+		if (name == GalleryProxy.BLOCK_ACTION_SELECT) {
+			// odznaczam zaznaczone grafiki
+			manager.setChecked(false);
+			// pokaz tylko grafiki, ktore nalerza do zaznaczonej galerii
+			GalleryVO gallery = (GalleryVO) notification.getBody();
+			for (ImageList<ImageVO> ich : manager.getList().values()) {
+				if (ich.getModel().getGalleryId() == gallery.getId()) {
+					ich.setVisible(true);
+				} else {
+					ich.setVisible(false);
+				}
+			}
+		} else
 		if (name == GalleryProxy.BLOCK_ACTION_SELECT_NONE) {
+			// odznaczam zaznaczone grafiki
+			manager.setChecked(false);
 			// gdy nie ma zaznaczonej żadnej galerii, pokaż wszystkie grafiki
 			// które nie są przypisane do żadnej galerii
 			for (ImageList<ImageVO> ich : manager.getList().values()) {
@@ -193,6 +199,8 @@ public class ImageBlockMediator extends Mediator {
 			}
 		} else
 		if (name == GalleryProxy.BLOCK_ACTION_SELECT_MULTI) {
+			// odznaczam zaznaczone grafiki
+			manager.setChecked(false);
 			// pobieram zaznaczone galerie
 			GalleryBlockMediator galleryBlock = (GalleryBlockMediator) Facade.getInstance(ApplicationFacade.INIT).retrieveMediator(GalleryBlockMediator.NAME);
 			CheckBoxListManager<GalleryVO> managerGallery = galleryBlock.getViewComponent().getCheckBoxListManager();
